@@ -8,3 +8,10 @@
 - Formatting
 > Entire entry should link to the main article, not just the title.
 > Formatting goes crazy on smaller screen -- fix formatting to resize correctly and work on mobile. 
+
+- Add appropriate favicon
+
+- Social
+> Social media integration
+> Comments Section
+> Upvotes/Downvotes
