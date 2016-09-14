@@ -15,16 +15,31 @@ angular.module('smartNews.services', ['ngCookies'])
   //dummy data for testing
   var data = window.data;
 
-  renderWatsonBubbleChart = function() {
-    console.log('rendering bubble chart!')
+  renderWatsonBubbleChart = function(event, articleData) {
+    console.log('RENDERING BUBBLE CHART!')
+    console.log('event: ', event)
+    console.log('articleData: ', articleData)
     var dataset = [ 5, 10, 15, 20, 25 ];
       var x = 2.5
 
-    d3.select('.article-preview')
+    // if (d3.select(event.target).hasClass('already-clicked')) {
+    //   return;
+    // }
+    // Add an svg container to the article.
+    // Note: event.path[3] is DOM node where I want to insert the svg.
+    var svg = d3.select(event.path[3])
       .insert('svg', '.article-subheading')
+      .attr('width', 0)
+      .attr('height', 0)
+
+    //slide-down effect
+    svg.transition()
+      .duration(200)
       .attr('width', 600)
       .attr('height', 300)
-      .selectAll('.bubbles')
+
+    //render the bubble chart
+    svg.selectAll('.bubbles')
       .data(dataset)
       .enter()
       .append('circle')
@@ -65,6 +80,7 @@ angular.module('smartNews.services', ['ngCookies'])
     var graph = document.getElementById('graph');
     var width = window.innerWidth - margin.left - margin.right;
     var height = window.innerHeight * 0.5 - margin.top - margin.bottom;
+    height = height > 350 ? 350 : height;
 
     // parse UTC date/time
     var parseTime = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');

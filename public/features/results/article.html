@@ -8,13 +8,13 @@
       </button>
     </span>
     <span class="analyze-button" ng-show="isAuth()">
-      <button ng-click="renderBubbleChart(article)" class="btn btn-default">
+      <button ng-click="renderBubbleChart($event, article)" class="btn btn-default">
         Analyze Tone
       </button>
     </span>
   </h2>
 
-  <div class="article-subheading">
+  <div class="article-subheading" id="{{'id' + article.id}}">
     <span class="article-source">
       {{ article.source.name }}
     </span>
