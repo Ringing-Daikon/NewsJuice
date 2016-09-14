@@ -16,40 +16,45 @@ angular.module('smartNews.services', ['ngCookies'])
   var data = window.data;
 
   renderWatsonBubbleChart = function(event, articleData) {
+    console.log(data)
     console.log('RENDERING BUBBLE CHART!')
     console.log('event: ', event)
     console.log('articleData: ', articleData)
     var dataset = [ 5, 10, 15, 20, 25 ];
       var x = 2.5
 
-    // if (d3.select(event.target).hasClass('already-clicked')) {
-    //   return;
-    // }
-    // Add an svg container to the article.
-    // Note: event.path[3] is DOM node where I want to insert the svg.
-    var svg = d3.select(event.path[3])
-      .insert('svg', '.article-subheading')
-      .attr('width', 0)
-      .attr('height', 0)
+    var button = angular.element(event.target)
 
-    //slide-down effect
-    svg.transition()
-      .duration(200)
-      .attr('width', 600)
-      .attr('height', 300)
+    if (!button.hasClass('inactive')) {
 
-    //render the bubble chart
-    svg.selectAll('.bubbles')
-      .data(dataset)
-      .enter()
-      .append('circle')
-      .attr('cx', (d) => {
-        x += d*2;
-        return (d * 2) + x;
-      })
-      .attr('cy', 25)
-      .attr('r', (d) => d)
-      .style('fill', 'purple')
+      button.addClass('inactive');
+
+      var svg = d3.select(event.path[3])
+        .insert('svg', '.article-subheading')
+        .attr('width', 0)
+        .attr('height', 0);
+
+      //slide-down effect
+      svg.transition()
+        .duration(200)
+        .attr('width', 600)
+        .attr('height', 300);
+
+      //render the bubble chart
+      svg.selectAll('.bubbles')
+        .data(dataset)
+        .enter()
+        .append('circle')
+        .attr('cx', (d) => {
+          x += d*2;
+          return (d * 2) + x;
+        })
+        .attr('cy', 25)
+        .attr('r', (d) => d)
+        .style('fill', 'purple')
+
+    }
+
   }
 
   return {
