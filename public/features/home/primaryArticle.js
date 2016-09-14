@@ -4,12 +4,12 @@ angular.module('smartNews.home')
 
   $scope.news = TopTrendsFactory.primaryArticle;
 
-  $scope.isAuth = function(){
+  $scope.isAuth = function() {
     $scope.user = isAuth();
     return !!isAuth();
   };
 
-  $scope.clickSave = function(){
+  $scope.clickSave = function() {
     var now = new Date();
     var article = {
       title: $scope.news[0].title,
