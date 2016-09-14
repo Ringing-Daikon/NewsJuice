@@ -1,7 +1,24 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const passport = require('passport');
 
-require('./config/middleware.js')(app, express);
-require('./config/routes.js')(app, express);
+require('./db/config.js');
+app.use(
+  require('morgan')('dev'),
+  bodyParser.json(),
+  bodyParser.urlencoded({extended: true}),
+  passport.initialize(),
+  passport.session(),
+  require('express-session')({
+    secret: 'juice juice',
+    saveUninitialized: false,
+    resave: true,
+  }),
+  express.static(`${__dirname}/../public`, {
+    index: 'layout.html'
+  }),
+  require('./config/routes.js')
+);
 
-module.exports = app;
+module.exports = app
