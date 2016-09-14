@@ -6,7 +6,7 @@ const aylien = require('../news-apis/aylien-helpers.js');
 const googleTrends = require('../news-apis/google-trends-helpers.js');
 /***CONTROLLERS***/
 const user = require('../db/user.controller.js'); 
-const article = require('../db/article.controller.js');
+const comment = require('../db/comment.controller.js');
 /***AUTOCOMPLETE***/
 router.get('/input/:input', (req, res) => require('request')(`https://en.wikipedia.org/w/api.php?action=query&format=json&generator=prefixsearch&prop=pageprops%7Cpageimages%7Cpageterms&redirects=&ppprop=displaytitle&piprop=thumbnail&pithumbsize=80&pilimit=5&wbptterms=description&gpssearch=${req.params.input}&gpsnamespace=0&gpslimit=5`, 
     (err, resp, body) => err ? 
@@ -44,5 +44,11 @@ router.get('/api/news/topTrendsDetail', (req, res) => googleTrends.hotTrendsDeta
 router.post('/article', user.saveArticle);
 router.delete('/unsaveArticle/:id', user.unsaveArticle);
 router.get('/profile', user.getProfile);
+/***COMMENT HANDLING***/
+router.route('/:id/comments')
+  .get(comment.getComments)
+  .post(comment.postComment)
+  .put(comment.editComment)
+  .delete(comment.deleteComment);
 
 module.exports = router;
