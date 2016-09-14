@@ -1,6 +1,6 @@
 angular.module('smartNews.results', [])
 
-.controller('ResultsCtrl', function($scope, $stateParams, $http, isAuth, saveArticle, renderGraph) {
+.controller('ResultsCtrl', function($scope, $stateParams, $http, isAuth, saveArticle, renderGraph, renderWatsonBubbleChart) {
 
   $scope.articleReceived = $stateParams.articleReceived;
 
@@ -11,6 +11,9 @@ angular.module('smartNews.results', [])
     return !!isAuth();
   };
 
+  $scope.renderBubbleChart = function() {
+    renderWatsonBubbleChart.renderWatsonBubbleChart()
+  }
 
   $scope.clickSave = function(el){
     var now = new Date();
