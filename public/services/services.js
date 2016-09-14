@@ -18,21 +18,23 @@ angular.module('smartNews.services', ['ngCookies'])
   renderWatsonBubbleChart = function() {
     console.log('rendering bubble chart!')
     var dataset = [ 5, 10, 15, 20, 25 ];
-
-
-      var svg = d3.select('.article-body');
       var x = 2.5
-      svg.selectAll('.circle')
-        .data(dataset)
-        .enter()
-        .append('circle')
-        .attr('cx', (d) => {
-          x += d*2;
-          return (d * 2) + x;
-        })
-        .attr('cy', 25)
-        .attr('r', (d) => d)
-        .style('fill', 'purple')
+
+    d3.select('.article-preview')
+      .insert('svg', '.article-subheading')
+      .attr('width', 600)
+      .attr('height', 300)
+      .selectAll('.bubbles')
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', (d) => {
+        x += d*2;
+        return (d * 2) + x;
+      })
+      .attr('cy', 25)
+      .attr('r', (d) => d)
+      .style('fill', 'purple')
   }
 
   return {
