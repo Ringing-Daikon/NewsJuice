@@ -1,109 +1,48 @@
-var app = require('../server.js');
-var routes = require('express').Router();
-var passport = require('./passport.js');
-var aylien = require('../news-apis/aylien-helpers.js');
-var googleTrends = require('../news-apis/google-trends-helpers.js');
-var request = require('request');
-var db = require('./db.controller.js');
-var path = require('path');
-
-module.exports = function(app, express) {
-
-/**************** AUTOCOMPLETE *****************/
-  app.route('/input/:input')
-    .get(function(req, res) {
-      var url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&generator=prefixsearch&prop=pageprops%7Cpageimages%7Cpageterms&redirects=&ppprop=displaytitle&piprop=thumbnail&pithumbsize=80&pilimit=5&wbptterms=description&gpssearch=' + req.params.input + '&gpsnamespace=0&gpslimit=5';
-      request(url, function(err, resp, body) {
-        if (err) {
-          console.log('there was an error requesting via express', err);
-        } else {
-          console.log('<<<<<<<<<<- congrats!!!');
-          res.status(200).send(body);
-        }
-      });
+/***EXPRESS***/
+const router = require('express').Router();
+//***APIS***/
+const passport = require('./passport.js');
+const aylien = require('../news-apis/aylien-helpers.js');
+const googleTrends = require('../news-apis/google-trends-helpers.js');
+/***CONTROLLERS***/
+const user = require('../db/user.controller.js'); 
+const article = require('../db/article.controller.js');
+/***AUTOCOMPLETE***/
+router.get('/input/:input', (req, res) => require('request')(`https://en.wikipedia.org/w/api.php?action=query&format=json&generator=prefixsearch&prop=pageprops%7Cpageimages%7Cpageterms&redirects=&ppprop=displaytitle&piprop=thumbnail&pithumbsize=80&pilimit=5&wbptterms=description&gpssearch=${req.params.input}&gpsnamespace=0&gpslimit=5`, 
+    (err, resp, body) => err ? 
+      res.status(500).send(err) 
+      : res.status(200).send(body)
+    )
+  );
+/***USER AUTH FACEBOOK***/
+router.get('/enter', (req, res) => {
+  res.redirect('/layout.html');
+});
+router.get('/auth/facebook',
+  passport.authenticate('facebook'));
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+    (req, res) => {
+    // Successful authentication, redirect home.
+      res.cookie('authenticate', req.session.passport);
+      res.redirect('/enter');
     });
-
-/**************** USER AUTH FACEBOOK *****************/
-  app.use(passport.initialize());
-  app.use(passport.session());
-
-  app.get('/enter', function(req, res){
-    console.log(__dirname);
-    res.sendFile(path.join(__dirname + '/../../public/layout.html'));
+router.get('/results/:input', (req, res) => aylien.timelineData(req.params.input, res));
+// http://localhost/3000/see-article?input=obama&start=[startdate]&end=[enddate]
+router.get('/seearticle', (req, res) => {
+    let q = req.query; 
+    aylien.articleImport(q.input, res, q.start, q.end, q.limit)
   });
+/***GOOGLE TRENDS***/
+// Top trends pull top # of trends from specified country
+  // googleTrends.hotTrends(resultLimit, country, res)
+    // resultLimit: Number
+    // country: String, ex: 'US', default is US
+router.get('/api/news/topTrends', (req, res) => googleTrends.hotTrends(res, 10, 'US'));
+router.get('/api/news/topTrendsDetail', (req, res) => googleTrends.hotTrendsDetail(res, 10, 'US'));
+/***SAVE ARTICLE***/
+router.post('/article', user.saveArticle);
+router.delete('/unsaveArticle/:id', user.unsaveArticle);
+router.get('/profile', user.getProfile);
 
-  app.get('/auth/facebook',
-    passport.authenticate('facebook'));
-
-  app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-      function(req, res) {
-      // Successful authentication, redirect home.
-        res.cookie('authenticate', req.session.passport);
-        // console.log('cookie being set', req.session.passport)
-        res.redirect('/enter');
-      });
-
-  app.route('/results/:input')
-    .get(function(req, res) {
-      console.log('Received get on /results/:input from app.route on routes.js');
-      aylien.timelineData(req.params.input, res);
-    });
-
-
-  // http://localhost/3000/see-article?input=obama&start=[startdate]&end=[enddate]
-  app.route('/seearticle')
-    .get(function(req, res) {
-      aylien.articleImport(req.query.input, res, req.query.start, req.query.end, req.query.limit);
-    });
-
-  /************************ GOOGLE TRENDS **********************************/
-  // Top trends pull top # of trends from specified country
-    // googleTrends.hotTrends(resultLimit, country, res)
-      // resultLimit: Number
-      // country: String, ex: 'US', default is US
-
-  app.route('/api/news/topTrends')
-    .get(function(req, res) {
-      googleTrends.hotTrends(res, 10, 'US');
-    });
-
-  app.route('/api/news/topTrendsDetail')
-    .get(function(req, res) {
-      googleTrends.hotTrendsDetail(res, 10, 'US');
-    });
-
-  /************************ SAVE ARTICLE **********************************/
-  app.route('/article')
-    .post(function(req, res) {
-      db.saveArticle.post(req, function(error, success) {
-        if (error) {
-          res.sendStatus(501);
-        } else {
-          res.send({article: success});
-        }
-      });
-    });
-
-  app.route('/unsaveArticle/:id')
-    .delete(function(req, res) {
-      db.unsaveArticle.delete(req, function(err, success){
-        res.send(success);
-      });
-    });
-
-  app.route('/profile')
-    .get(function(req, res) {
-      db.profile.get(req, function(error, success) {
-        res.send(success);
-      });
-    });
-
-
-  // Error handling: send log the error and send status 500. This handles one error.
-  app.use(function(err, req, res, next) {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-  });
-
-};
+module.exports = router;

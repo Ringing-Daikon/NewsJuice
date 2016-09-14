@@ -1,56 +1,36 @@
-var googleTrends = require('google-trends-api');
+const googleTrends = require('google-trends-api');
 
-/************************ GOOGLE TRENDS **********************************/
-
-var hotTrends = function(res, limit, country) {  
-// hotTrends pull top # of trends from specified country
-  // resultLimit: Number
-  // country: String, ex: 'US', default is US
-  country = country || 'US';
-  googleTrends.hotTrends(country)
-    .then(function (response) {
-      res.send(response.slice(0, limit));
-    })
-    .catch(function(error) {
-      console.log(error, 'ERROR! WITH GOOGLE TRENDS');
-    });
-};
-
-
-var hotTrendsDetail = function(res, limit, country) {  
-// hotTrends pull top # of trends from specified country
-  // resultLimit: Number
-  // country: String, ex: 'US', default is US
-  // Response: Array of objects of each individual trend
-  country = country || 'US';
-  googleTrends.hotTrendsDetail(country)
-    .then(function (response) {
-      // res.send(response.rss.channel[0].item.slice(limit));
-      var results = response.rss.channel[0].item;
-      var sortedResults = sortByTraffic(results);
-      res.send(sortedResults.slice(0, limit));
-    })
-    .catch(function(error) {
-      console.log(error, 'ERROR! WITH GOOGLE TRENDS');
-    });
-};
-
+var trafficToNumber = traffic => Number(traffic
+  .replace('+', '')
+  .replace(',', '')
+);
+var sortByTraffic = result => result
+  .sort((a, b) => trafficToNumber(b['ht:approx_traffic'][0])
+     - trafficToNumber(a['ht:approx_traffic'][0])
+);
+/***GOOGLE TRENDS***/
 module.exports = {
-  hotTrends: hotTrends,
-  hotTrendsDetail: hotTrendsDetail
+  hotTrends (res, limit, country = 'US') {  
+  // hotTrends pull top # of trends from specified country
+    // resultLimit: Number
+    // country: String, ex: 'US', default is US
+    googleTrends.hotTrends(country)
+      .then(data => res.status(200).send(data.slice(0, limit)))
+      .catch(err => res.status(500).send(err));
+  },
+  hotTrendsDetail (res, limit, country = 'US') {  
+  // hotTrends pull top # of trends from specified country
+    // resultLimit: Number
+    // country: String, ex: 'US', default is US
+    // Response: Array of objects of each individual trend
+    googleTrends.hotTrendsDetail(country)
+      .then(data => res.status(200)
+        .send(sortByTraffic(data.rss.channel[0].item)
+          .slice(0, limit)))
+      .catch(err => res.status(500).send(err));
+  }
 };
 
 
-var sortByTraffic = function(result) {
-  result.sort(function(a, b) {
-    return trafficToNumber(b['ht:approx_traffic'][0]) - trafficToNumber(a['ht:approx_traffic'][0]);
-  });
-  return result;
-};
-
-
-var trafficToNumber = function (traffic) {
-  return Number(traffic.replace('+', '').replace(',', '').replace(',', ''));
-};
 
 

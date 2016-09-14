@@ -1,41 +1,33 @@
-var keys = require('../../keys.js');
-var passport = require('passport');
-var FacebookStrategy = require('passport-facebook').Strategy;
+const keys = require('../../keys.js');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
 
-
-/****** REQUIRE DATABASE ******/
-var db = require('../db/config.js');
-var User = require('../db/user.schema.js');
 /****************** PASSPORT CONFIG ***************/
-
 passport.use(new FacebookStrategy({
   clientID: keys.facebook.FACEBOOK_APP_ID,
   clientSecret: keys.facebook.FACEBOOK_APP_SECRET,
   callbackURL: 'http://localhost:3000/auth/facebook/callback',
-  profileFields: ['id', 'name', 'picture.type(large)', 'email', 'gender']
+  profileFields: [
+    'id', 
+    'name', 
+    'picture.type(large)', 
+    'email', 
+    'gender'
+  ]
 },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreateUser(profile, function(error, user) {
-      if (error) {
-        return done(error);
-      } else {
-        done(null, {
+  (accessToken, refreshToken, profile, cb) =>
+  require('../db/user.controller.js').findOrCreateUser(profile,
+    (err, user) => err ?
+      cb(err)
+      : cb(null, {
           _facebookUniqueID: user._facebookUniqueID,
           firstname: user.firstname,
           lastname: user.lastname,
           picture: user.picture
-        });
-      }
-    });
-  })
+      })
+    ))
 );
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
+passport.serializeUser((user, cb) => cb(null, user));
+passport.deserializeUser((user, cb) => cb(null, user));
 
 module.exports = passport;

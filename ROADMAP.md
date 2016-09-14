@@ -15,3 +15,19 @@
 > Social media integration
 > Comments Section
 > Upvotes/Downvotes
+
+
+
+TASKS: 
+
+-Marco
+> Watson & Query Optimization
+- Mike 
+> Comment solutions
+> APIs for upvoting or comments, etc.
+>Twilio
+- Connor
+> D3 data visualizations
+- Brad
+> OAuth
+> Social Media Integration/sharing

@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
+const mongoUri = 'mongodb://localhost/voraciousscroll'
 
-mongoose.connect('mongodb://localhost/voraciousscroll');
-
-module.exports = mongoose;
+require('mongoose').connect(mongoUri).connection
+  .on('error', err => console.error(err))
+  .once('open', () => console.log(require('chalk').green(`Connected to ${mongoUri}`)));
