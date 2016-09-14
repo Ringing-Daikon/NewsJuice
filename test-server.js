@@ -6,6 +6,7 @@ app.listen(1337, function() {
   console.log('Watson test server listening on port 1337.');
 });
 
+// options structure needed to get tone analyze
 var options = {
   uri: 'https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2016-05-19',
   auth: { 
@@ -28,5 +29,4 @@ app.get('/', (req, res) => {
     } 
     res.send(JSON.stringify(body)); 
   });
-    
 });
