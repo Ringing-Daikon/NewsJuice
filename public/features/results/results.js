@@ -15,7 +15,7 @@ angular.module('smartNews.results', [])
     renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event)
   }
 
-  $scope.clickSave = function(el){
+  $scope.clickSave = function(el) {
     var now = new Date();
 
     var article = {

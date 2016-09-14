@@ -230,10 +230,10 @@ angular.module('smartNews.services', ['ngCookies'])
 .factory('saveArticle', function($http) {
   return function(article) {
     $http({
-        method: 'POST',
-        data: article,
-        url: '/article'
-      })
+      method: 'POST',
+      data: article,
+      url: '/article'
+    })
       .then(function(data) {
         console.log('success posting', data);
       });
@@ -247,7 +247,7 @@ angular.module('smartNews.services', ['ngCookies'])
       method: 'DELETE',
       url: url
     })
-    .then(function(data){
+    .then(function(data) {
       console.log('success deleting', data);
       cb();
     });
@@ -260,8 +260,8 @@ angular.module('smartNews.services', ['ngCookies'])
       method: 'GET',
       url: '/profile'
     })
-    .then(function(data){
-      data.data.forEach(function(e){
+    .then(function(data) {
+      data.data.forEach(function(e) {
         e.formattedPublishDate = moment(e.publishDate).format('MMM DD YYYY');
         e.formattedSavedDate = moment(e.savedDate).format('MMM DD YYYY');
       });
@@ -269,6 +269,73 @@ angular.module('smartNews.services', ['ngCookies'])
     });
   };
 })
+
+.factory('Comment', function($http, $httpParamSerializer) {
+
+  return {
+
+    get: function() {
+      return $http.get('/id:/comments');
+    },
+
+    save: function(commentData) {
+      return $http({
+        method: 'POST',
+        url: '/id:/comments',
+        //  $httpParamSerializer
+        data: $httpParamSerializer(commentData)
+      });
+
+    },
+
+    delete: function(commentId) {
+      return $http('/id:/comments' + commentId);
+    }
+
+
+  };
+})
+
+
+/////////////////////////////////////////////////////////////
+  // IN PROGRESS
+/////////////////////////////////////////////////////////////
+
+// .factory('getAllComments', function($http) {
+//   return function(cb) {
+//     $http({
+//       method: 'GET',
+//       url: '/comment'
+//     })
+//     .then(function(data) {
+//       //////
+//     //CONFIG THIS DATA FOR COMMENTS
+//       /////
+//       data.data.forEach(function(e) {
+//         e.formattedPublishDate = moment(e.publishDate).format('MMM DD YYYY');
+//         e.formattedSavedDate = moment(e.savedDate).format('MMM DD YYYY');
+//       });
+//       cb(data.data);
+//     });
+//   };
+
+// })
+
+
+// .factory('saveComment', function($http) {
+//   return function(comment) {
+//     $http({
+//       method: 'POST',
+//       data: $.params(comment),
+//       url: '/comment'
+//     })
+//     .then(function(data) {
+//       console.log('Success posting a comment', data);
+//     });
+//   };
+// })
+
+
 
 .factory('TopTrendsFactory', function($http, $sanitize) {
   var topTrends = [];
@@ -291,9 +358,9 @@ angular.module('smartNews.services', ['ngCookies'])
 
     var url = '/seearticle?input=' + topic + '&start=' + publishStart + '&end=' + publishEnd + '&limit=1';
     return $http({
-        method: 'GET',
-        url: url
-      })
+      method: 'GET',
+      url: url
+    })
       .then(function(article) {
         return article;
       });
@@ -301,9 +368,9 @@ angular.module('smartNews.services', ['ngCookies'])
 
   var topTrendsGoogleTrends = function() {
     return $http({
-        method: 'GET',
-        url: '/api/news/topTrendsDetail'
-      })
+      method: 'GET',
+      url: '/api/news/topTrendsDetail'
+    })
       .then(function(response) {
         response.data.forEach(function(topic, index) {
           if (index === 0) {
@@ -338,6 +405,18 @@ angular.module('smartNews.services', ['ngCookies'])
     sanitizeTitle: sanitizeTitle
   };
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
