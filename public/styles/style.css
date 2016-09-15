@@ -212,7 +212,12 @@ li.trend-listing {
 
 .article-name {
   display: inline-block;
-  max-width: 85%;
+  max-width: 70%;
+}
+
+.article-bubble-chart {
+  display: block;
+  margin: 0 auto;
 }
 
 .article-image {
