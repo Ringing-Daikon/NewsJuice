@@ -150,8 +150,18 @@ li.trend-listing {
   float: right;
 }
 
+.analyze-button {
+  float: right;
+  margin-right: 3px;
+}
+
 .article-title {
   padding-right: 10px;
+}
+
+.article-name {
+  display: inline-block;
+  max-width: 85%;
 }
 
 .article-image {

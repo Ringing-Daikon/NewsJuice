@@ -1,15 +1,20 @@
 <div class="container-fluid article-preview" ng-repeat="article in articles">
 
   <h2 class="article-title">
-    <a ng-href="{{ article.links.permalink }}"> {{ article.title }} </a>
+    <a class="article-name" ng-href="{{ article.links.permalink }}"> {{ article.title }} </a>
     <span class="save-button" ng-show="isAuth()">
       <button ng-click="clickSave(article)" class="btn btn-default">
         Save Article
       </button>
     </span>
+    <span class="analyze-button" ng-show="isAuth()">
+      <button ng-click="renderBubbleChart($event, article)" class="btn btn-default">
+        Analyze Tone
+      </button>
+    </span>
   </h2>
 
-  <div class="article-subheading">
+  <div class="article-subheading" id="{{'id' + article.id}}">
     <span class="article-source">
       {{ article.source.name }}
     </span>
