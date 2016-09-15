@@ -90,7 +90,7 @@ angular.module('smartNews.services', ['ngCookies'])
           var strokeIndex = 0;
           var fillIndex = 0;
 
-          // var colors = d3.schemeCategory20;
+          // colors for different bubbles
           var colors = {
             anger: '#E80521',
             disgust: '#592684',
@@ -102,19 +102,16 @@ angular.module('smartNews.services', ['ngCookies'])
           var bubbleOpacity = .7;
           var strokeOpacity = 1;
 
-          // for schemeCategory20b : 12, 16, 8, 4, 0
-          var selectColor = function(id) {
-            return colors[id]
-          }
-
+          // style the bubbles
           bubble.attr('cx', (d) => d.x)
             .attr('cy', (d) => d.y - 5)
-            .style('fill', (d) => selectColor(d.tone_id))
+            .style('fill', (d) => colors[d.tone_id])
             .style('fill-opacity', bubbleOpacity)
             .style('stroke', 'white')
             .style('stroke-width', '1.5px')
             .style('stroke-opacity', strokeOpacity);
 
+          // Add text to the bubbles.
           colorIndex = 0;
           nodes.append('text')
             .attr('x', (d) => d.x)
