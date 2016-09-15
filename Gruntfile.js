@@ -1,4 +1,4 @@
-const nodeModules = 'public/node_modules';
+const nodeModules = 'node_modules';
 const features = 'public/features';
 
 module.exports = function(grunt) {
@@ -21,23 +21,23 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: [
-          `${nodeModules}/angular/angular.min.js`, 
-          `${nodeModules}/angular-ui-router/release/angular-ui-router.min.js`,
-          `${nodeModules}//d3/build/d3.min.js`,
-          `${nodeModules}/angular-sanitize/angular-sanitize.min.js`,
-          `${nodeModules}/moment/min/moment.min.js`,
-          `${nodeModules}/angular-cookies/angular-cookies.js`,
-          `${nodeModules}/angular-ui-bootstrap/dist/ui-bootstrap.js`,
-          `${nodeModules}/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js`,
+          'node_modules/angular/angular.min.js', 
+          'node_modules/angular-ui-router/release/angular-ui-router.min.js',
+          'node_modules//d3/build/d3.min.js',
+          'node_modules/angular-sanitize/angular-sanitize.min.js',
+          'node_modules/moment/min/moment.min.js',
+          'node_modules/angular-cookies/angular-cookies.js',
+          'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
+          'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+          'public/layout.js',
           'public/services/services.js',
           `${features}/results/results.js`,
           `${features}/home/home.js`,
           `${features}/home/trends.js`,
           `${features}/home/primaryArticle.js`,
           `${features}/profile/profile.js`,
-          'public/layout.js',
+          `${features}/home/comments.js`,
           `${features}/nav/nav.js`,
-          `${features}/home/comments.js`
 
         ],
         dest: 'public/dist/bundle.js'
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
       },
       target: {
         files: {
-          'public/dist/style.min.css': [`${nodeModules}/bootstrap/dist/css/bootstrap.min.css`, 'public/styles/style.css']
+          'public/dist/style.min.css': ['node_modules/bootstrap/dist/css/bootstrap.min.css', 'public/styles/style.css']
         }
       }
     },
