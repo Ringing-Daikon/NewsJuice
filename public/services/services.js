@@ -99,7 +99,7 @@ angular.module('smartNews.services', ['ngCookies'])
         sadness: '#086DB2'
       }
       var colorScheme = 0;
-      var bubbleOpacity = 1;
+      var bubbleOpacity = .8;
       var strokeOpacity = 1;
 
       // for schemeCategory20b : 12, 16, 8, 4, 0
