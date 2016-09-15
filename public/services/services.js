@@ -237,6 +237,7 @@ angular.module('smartNews.services', ['ngCookies'])
         firstname: parsedAuth.firstname,
         lastname: parsedAuth.lastname,
         picture: parsedAuth.picture,
+        _facebookUniqueID: parsedAuth._facebookUniqueID
       };
     }
     return null;
