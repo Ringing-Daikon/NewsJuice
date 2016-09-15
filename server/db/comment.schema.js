@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var commentSchema = new mongoose.Schema({
-  id: String,
+  id: Number,
   _facebookUniqueID: String,
   text: String
 },

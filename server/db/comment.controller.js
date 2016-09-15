@@ -1,14 +1,15 @@
 const Comment = require('./comment.schema.js');
 
 module.exports = {
+  // id is articleID aka TopTrends.primaryArticle[0].id in most cases
   getComments(req, res) {
     Comment.find({id: req.params.id},
-      (err, data) => err || data === null ? 
+      (err, data) => err || data === null ?
         res.status(404).send(err)
         : res.status(200).send(data)
     );
   },
-  postComment(req, res) { 
+  postComment(req, res) {
     new Comment({
       id: req.params.id,
       _facebookUniqueID: req.body._facebookUniqueID,
@@ -21,14 +22,14 @@ module.exports = {
   editComment(req, res) {
     Comment.findOneAndUpdate({id: req.params.id, _id: req.body._id},
       {text: req.body.text},
-      {new: true}, 
+      {new: true},
       (err, data) => err || data === null ?
         res.status(404).send(err)
         : res.status(200).send(data)
     );
   },
   deleteComment(req, res) {
-    Comment.remove({id: req.params.id, _id: req.body._id}, 
+    Comment.remove({_id: req.params.id},
       (err, data) => err || data === null ?
         res.status(404).send(err)
         : res.status(200).send(data)

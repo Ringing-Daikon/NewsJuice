@@ -2,8 +2,6 @@
 <div >
   <form ng-submit='addComment()' ng-controller='CommentCtrl'> <!-- ng-submit will disable the default form action and use our function -->
 
-
-
         <!-- COMMENT TEXT -->
         <div class="form-group">
             <input type="text" class="form-control input-lg" name="text" ng-model="commentData.text" placeholder="Enter Your Comments">
@@ -15,8 +13,8 @@
         </div>
 
 
-        <!-- Display Comments -->
-        <div ng-repeat='comment in comments'>
+        <!-- Display Comments in Reverse Order -->
+        <div ng-repeat='comment in comments.slice().reverse()'>
           <div id="comments-header">
             <h2 class="comment">
               {{user.firstname}}&nbsp{{user.lastname}}
@@ -28,7 +26,7 @@
           </div>
 
 
-          <span><a href='#' ng-click='deleteComment(comment._id)' class='text-muted'>Delete</a></span>
+          <span><a href='#' ng-click='deleteComment(comment._id); $event.preventDefault()' class='text-muted'>Delete</a></span>
 
 
           <span><a href='#' ng-click='shareComment' class='text-muted'>Share</a></span>
