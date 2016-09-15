@@ -296,15 +296,24 @@ angular.module('smartNews.services', ['ngCookies'])
       // console.log(articleID);
       return $http({
         method: 'GET',
+<<<<<<< 45d2ab2797ade3655718d151914644d8b0ea85e2
         url: url,
+=======
+        url: 'comments/20507927',
+>>>>>>> Implements New Comment Endpoints
       });
       // .then(function() {
       //   console.log(articleID);
       // });
     },
 
+<<<<<<< 45d2ab2797ade3655718d151914644d8b0ea85e2
     save: function(commentData, user, articleID) {
       var url = '/comments/' + articleID[0].id;
+=======
+    save: function(commentData, user, news) {
+      var url = '/comments' + news[0].id;
+>>>>>>> Implements New Comment Endpoints
       return $http({
         method: 'POST',
         url: url,
@@ -320,7 +329,11 @@ angular.module('smartNews.services', ['ngCookies'])
     delete: function(commentID) {
       return $http({
         method: 'DELETE',
+<<<<<<< 45d2ab2797ade3655718d151914644d8b0ea85e2
         url: '/comments/' + commentID
+=======
+        url: '/comments' + commentID
+>>>>>>> Implements New Comment Endpoints
       });
     }
 

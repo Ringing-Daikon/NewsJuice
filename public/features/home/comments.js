@@ -8,8 +8,7 @@ angular.module('smartNews.home')
 
   // USER INFO
   $scope.user = isAuth();
-  // console.log($scope.user);
-  // $timeout(functition() {
+
   // Primary Article Info
   $scope.articleID = TopTrendsFactory.primaryArticle;
   // console.log($scope.articleID[0]);
@@ -33,10 +32,9 @@ angular.module('smartNews.home')
     Comment.save($scope.commentData, $scope.user, $scope.articleID)
       .success(function(data) {
         $scope.comments.push(data);
-        console.log($scope.articleID[0]);
       })
       .error(function(err) {
-        console.log(err);
+        console.error(err);
       });
 
   };
