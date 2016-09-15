@@ -19,6 +19,9 @@ module.exports = function(grunt) {
     },
 
     concat: {
+      options: {
+        sourceMap: true
+      },
       dist: {
         src: [
           'node_modules/angular/angular.min.js', 
