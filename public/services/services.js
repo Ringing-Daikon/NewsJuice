@@ -12,8 +12,6 @@ angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope, $http) {
   
-  //dummy data for testing
-  var data = window.data;
 
   /* 
     returns a promise that will return tone analysis data for
@@ -31,42 +29,69 @@ angular.module('smartNews.services', ['ngCookies'])
   };
 
   renderWatsonBubbleChart = function(event, articleData) {
-    console.log(data)
     console.log('RENDERING BUBBLE CHART!')
-    console.log('event: ', event)
-    console.log('articleData: ', articleData)
-    var dataset = [ 5, 10, 15, 20, 25 ];
-      var x = 2.5
-
+    console.log('DATA: ', data)
+    // console.log('event: ', event)
+    // console.log('articleData: ', articleData)
     var button = angular.element(event.target)
 
     if (!button.hasClass('inactive')) {
-
       button.addClass('inactive');
 
+
+      var diameter = 960,
+        format = d3.format(',d');
+        // color = d3.scale.category20c();
+
+      // var bubble = d3.layout.pack()
+      //   .sort(null)
+      //   .size([diameter, diameter])
+      //   .padding(1.5)
+
+
+      // create svg container
       var svg = d3.select(event.path[3])
         .insert('svg', '.article-subheading')
         .attr('width', 0)
-        .attr('height', 0);
-
+        .attr('height', 0)
+        .attr('class', 'bubble');
       //slide-down effect
       svg.transition()
         .duration(200)
         .attr('width', 600)
         .attr('height', 300);
 
+
       //render the bubble chart
-      svg.selectAll('.bubbles')
-        .data(dataset)
-        .enter()
-        .append('circle')
-        .attr('cx', (d) => {
-          x += d*2;
-          return (d * 2) + x;
-        })
-        .attr('cy', 25)
-        .attr('r', (d) => d)
-        .style('fill', 'purple')
+      data = data.document_tone.tone_categories[0].tones;
+      console.log(data);
+
+      svg.selectAll('.node')
+        .data(data)
+        .attr('class', 'node')
+        .attr('transform',)
+      // d3.json(data, function(error, root) {
+      //   if (error) throw error;
+
+      //   var node = svg.selectAll('.node')
+      //     .data(bubble.nodes(classes(root))
+      //       .filter((d) => !d.children)
+      // })
+
+
+
+
+      // svg.selectAll('.bubbles')
+      //   .data(dataset)
+      //   .enter()
+      //   .append('circle')
+      //   .attr('cx', (d) => {
+      //     x += d*2;
+      //     return (d * 2) + x;
+      //   })
+      //   .attr('cy', 25)
+      //   .attr('r', (d) => d)
+      //   .style('fill', 'purple')
 
     }
 
