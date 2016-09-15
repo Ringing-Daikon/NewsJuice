@@ -28,7 +28,8 @@ angular.module('smartNews.services', ['ngCookies'])
   };
 
   renderWatsonBubbleChart = function(event, articleData) {
-    console.log('event!!!!!!!!!!!!', event);
+
+    console.log(articleData);
 
     var button = angular.element(event.target)
 
@@ -40,6 +41,11 @@ angular.module('smartNews.services', ['ngCookies'])
     // don't render another one.
     if (!button.hasClass('inactive')) {
       button.addClass('inactive');
+
+      // Send article body to watson, get data back.
+      analyzeText(articleData.body)
+
+
 
       // dimensions of SVG component and colors array
       var width = 240,
