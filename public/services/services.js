@@ -12,7 +12,6 @@ angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope, $http) {
   
-
   /* 
     returns a promise that will return tone analysis data for
     the given string input.
@@ -30,68 +29,101 @@ angular.module('smartNews.services', ['ngCookies'])
 
   renderWatsonBubbleChart = function(event, articleData) {
     console.log('RENDERING BUBBLE CHART!')
-    console.log('DATA: ', data)
-    // console.log('event: ', event)
-    // console.log('articleData: ', articleData)
     var button = angular.element(event.target)
 
     if (!button.hasClass('inactive')) {
       button.addClass('inactive');
 
 
-      var diameter = 960,
-        format = d3.format(',d');
-        // color = d3.scale.category20c();
+      var diameter = 500,
+          format   = d3.format(',d'),
+          color    = d3.schemeCategory20;
 
-      // var bubble = d3.layout.pack()
-      //   .sort(null)
+
+      // var bubble = d3.pack(data)
+      //   // .sort(null)
       //   .size([diameter, diameter])
-      //   .padding(1.5)
+      //   .padding(1.5);
 
 
-      // create svg container
+      var circles = [
+        {
+          text: 'wendy',
+          r: 50
+        },
+        {
+          text: 'connor',
+          r: 100
+        },
+        {
+          text: 'andrew',
+          r: 150
+        },
+      ]
+      var circles = d3.packSiblings(circles);
+
+      // console.log('bubble: ', bubble);
+      // create svg container with slide-down effect
       var svg = d3.select(event.path[3])
         .insert('svg', '.article-subheading')
         .attr('width', 0)
         .attr('height', 0)
         .attr('class', 'bubble');
-      //slide-down effect
       svg.transition()
         .duration(200)
-        .attr('width', 600)
-        .attr('height', 300);
+        .attr('width', diameter)
+        .attr('height', diameter);
+
+      //set up the chart
+      var nodes = svg.append('g')
+        .attr('transform', 'translate(250, 250)')
+        .selectAll('.bubble')
+        .data(circles)
+        .enter();
+
+      nodes.append('circle')
+        .attr('r', (d) => {
+          console.log(d)
+          return d.r;
+        })
+        .attr('cx', (d) => d.x)
+        .attr('cy', (d) => d.y)
+        .style('fill', 'red')
+
+      nodes.append('text')
+        .attr('x', (d) => d.x)
+        .attr('y', (d) => d.y)
+        .attr('text-anchor', 'middle')
+        .text((d) => d.text)
+        .style({
+          fill: 'white'
+        })
+      // bubbles.append('circle')
+      //   .attr('r', (d) => d.score * 300)
+      //   .attr('cx', )
 
 
-      //render the bubble chart
-      data = data.document_tone.tone_categories[0].tones;
-      console.log(data);
-
-      svg.selectAll('.node')
-        .data(data)
-        .attr('class', 'node')
-        .attr('transform',)
-      // d3.json(data, function(error, root) {
-      //   if (error) throw error;
-
-      //   var node = svg.selectAll('.node')
-      //     .data(bubble.nodes(classes(root))
-      //       .filter((d) => !d.children)
-      // })
 
 
 
 
+
+      // THIS IS NOT THE BUBBLE CHART, BUT IT SHOULD RENDER
+      // FOR TESTING PURPOSES
+      // data = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+      // x = 1
+      // var color = d3.schemeCategory20;
       // svg.selectAll('.bubbles')
-      //   .data(dataset)
+      //   .data(data)
       //   .enter()
       //   .append('circle')
       //   .attr('cx', (d) => {
       //     x += d*2;
       //     return (d * 2) + x;
       //   })
-      //   .attr('cy', 25)
+      //   .attr('cy', 150)
       //   .attr('r', (d) => d)
-      //   .style('fill', 'purple')
+      //   .style('fill', (d, i) => color[i])
 
     }
 
