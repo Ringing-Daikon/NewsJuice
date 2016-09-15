@@ -3,6 +3,7 @@
 angular.module('smartNews', [
   'ui.router',
   'smartNews.profile',
+  // 'smartNews.fullView',
   'smartNews.home',
   'smartNews.results',
   'ngCookies',
@@ -38,11 +39,19 @@ angular.module('smartNews', [
       templateUrl: 'features/profile/profile.html',
       controller: 'ProfileCtrl',
       authenticate: false
-    });
+    })
+
+    // .state('fullView', {
+    //   url: '/fullView',
+    //   templateUrl: 'features/fullView/fullView.html',
+    //   controller: 'FullViewCtrl',
+    //   authenticate: false
+    // });
 
   $urlRouterProvider.otherwise('/main/home');
   $httpProvider.interceptors.push('requestCookie');
 })
+
 .factory('requestCookie', function ($document, $cookies) {
   // console.log('this factory');
   return {
@@ -94,7 +103,7 @@ angular.module('smartNews', [
         url: url
       })
       .then(
-        function(obj){
+        function(obj) {
           // console.log('obj:', obj);
           $state.go('main.results', {input: $scope.searchinput, articleReceived: false})
           .then(function() {
@@ -104,7 +113,7 @@ angular.module('smartNews', [
 
           });
         },
-        function(error){
+        function(error) {
           console.log('Error', error);
         }
       );
