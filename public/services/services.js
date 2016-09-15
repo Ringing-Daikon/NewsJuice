@@ -28,33 +28,30 @@ angular.module('smartNews.services', ['ngCookies'])
   };
 
   renderWatsonBubbleChart = function(event, articleData) {
-    console.log('RENDERING BUBBLE CHART!')
     var button = angular.element(event.target)
 
+    var data = window.data; // replace this line with the data from actual API
+    
+    var data = data.document_tone.tone_categories[0].tones;
+
+    // If a bubbleChart has already been rendered for that article,
+    // don't render another one.
     if (!button.hasClass('inactive')) {
       button.addClass('inactive');
 
-
+      // dimensions of SVG component and colors array
       var width = 1100,
           height = 300,
-          format   = d3.format(',d'),
-          color    = d3.schemeCategory20;
+          colors    = d3.schemeCategory20;
 
-
-      // var bubble = d3.pack(data)
-      //   // .sort(null)
-      //   .size([diameter, diameter])
-      //   .padding(1.5);
-
+      // packSiblings below requires a 'r' (radius) property
+      // on each item to determine the radius and location
+      // of the circles it will render.
       for (var i = 0; i < data.length; i++) {
         data[i].r = data[i].score * 150;
       }
-      console.log(data);
-      
-
       var circles = d3.packSiblings(data);
 
-      // console.log('bubble: ', bubble);
       // create svg container with slide-down effect
       var svg = d3.select(event.path[3])
         .insert('svg', '.article-subheading')
@@ -73,13 +70,17 @@ angular.module('smartNews.services', ['ngCookies'])
         .data(circles)
         .enter();
 
+      var colorIndex = 0;
       nodes.append('circle')
         .attr('r', (d) => {
-          return d.r;
+          return d.r - 0.5;
         })
         .attr('cx', (d) => d.x)
-        .attr('cy', (d) => d.y)
-        .style('fill', 'red')
+        .attr('cy', (d) => d.y - 5)
+        .style('fill', () => {
+          colorIndex++;
+          return colors[colorIndex-1];
+        })
 
       nodes.append('text')
         .attr('x', (d) => d.x)
@@ -88,35 +89,8 @@ angular.module('smartNews.services', ['ngCookies'])
         .text((d) => d.tone_name)
         .style({
           'fill': 'white',
-
+          'font-family': '"EB Garamond", serif'
         })
-      // bubbles.append('circle')
-      //   .attr('r', (d) => d.score * 300)
-      //   .attr('cx', )
-
-
-
-
-
-
-
-      // THIS IS NOT THE BUBBLE CHART, BUT IT SHOULD RENDER
-      // FOR TESTING PURPOSES
-      // data = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-      // x = 1
-      // var color = d3.schemeCategory20;
-      // svg.selectAll('.bubbles')
-      //   .data(data)
-      //   .enter()
-      //   .append('circle')
-      //   .attr('cx', (d) => {
-      //     x += d*2;
-      //     return (d * 2) + x;
-      //   })
-      //   .attr('cy', 150)
-      //   .attr('r', (d) => d)
-      //   .style('fill', (d, i) => color[i])
-
     }
 
   }
