@@ -11,8 +11,16 @@
 angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope, $http) {
-  
-  /* 
+
+
+  /*
+=======
+
+  //dummy data for testing
+  var data = window.data;
+
+  /*
+>>>>>>> pre-merge commit
     returns a promise that will return tone analysis data for
     the given string input.
   */
@@ -45,7 +53,7 @@ angular.module('smartNews.services', ['ngCookies'])
       analyzeText(articleData.body)
         .then((responseData) => {
           var data = responseData.document_tone.tone_categories[0].tones;
-          
+
           // SVG box dimensions:
           var width = 400,
               height = 250;
@@ -89,7 +97,7 @@ angular.module('smartNews.services', ['ngCookies'])
               });
 
           //increment the colorIndex to pick a different color for each bubble.
-          
+
           var strokeIndex = 0;
           var fillIndex = 0;
 
@@ -128,7 +136,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
 
 
-      
+
     }
 
   }
@@ -358,9 +366,7 @@ angular.module('smartNews.services', ['ngCookies'])
         method: 'GET',
         url: url,
       });
-      // .then(function() {
-      //   console.log(articleID);
-      // });
+
     },
 
     save: function(commentData, user, articleID) {
