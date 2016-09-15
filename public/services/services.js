@@ -28,9 +28,11 @@ angular.module('smartNews.services', ['ngCookies'])
   };
 
   renderWatsonBubbleChart = function(event, articleData) {
+    console.log('event!!!!!!!!!!!!', event);
+
     var button = angular.element(event.target)
 
-    var data = window.data; // replace this line with the data from actual API
+    var data = window.watsonData; // replace this line with the data from actual API
     
     var data = data.document_tone.tone_categories[0].tones;
 
@@ -40,16 +42,19 @@ angular.module('smartNews.services', ['ngCookies'])
       button.addClass('inactive');
 
       // dimensions of SVG component and colors array
-      var width = 1100,
-          height = 300,
+      var width = 240,
+          height = 240,
           colors    = d3.schemeCategory20;
 
-      // packSiblings below requires a 'r' (radius) property
-      // on each item to determine the radius and location
-      // of the circles it will render.
+      
       for (var i = 0; i < data.length; i++) {
         data[i].r = data[i].score * 150;
       }
+
+      // packSiblings takes in data with an 'r' (radius)
+      // property, and generates 'x' and 'y' properties
+      // on each item that will reflect their position
+      // on the bubble chart.
       var circles = d3.packSiblings(data);
 
       // create svg container with slide-down effect
@@ -57,40 +62,61 @@ angular.module('smartNews.services', ['ngCookies'])
         .insert('svg', '.article-subheading')
         .attr('width', 0)
         .attr('height', 0)
-        .attr('class', 'bubble');
+        .attr('class', 'article-bubble-chart');
       svg.transition()
         .duration(200)
         .attr('width', width)
         .attr('height', height);
 
-      //set up the chart
+      // set up the bubble chart
+      //
       var nodes = svg.append('g')
-        .attr('transform', 'translate(550, 150)')
+        .attr('transform', 'translate(130, 130)')
         .selectAll('.bubble')
         .data(circles)
         .enter();
 
-      var colorIndex = 0;
-      nodes.append('circle')
-        .attr('r', (d) => {
-          return d.r - 0.5;
-        })
-        .attr('cx', (d) => d.x)
+
+      // render the bubbles
+      var bubble = nodes.append('circle')
+        .attr('r', 0)
+        .transition()
+          .duration(500)
+          .attr('r', (d) => {
+            return d.r - 0.5;
+          })
+
+      //increment the colorIndex to pick a different color for each bubble.
+      var strokeIndex = 0;
+      var fillIndex = 0;
+      var colorScheme = 0;
+
+      bubble.attr('cx', (d) => d.x)
         .attr('cy', (d) => d.y - 5)
         .style('fill', () => {
-          colorIndex++;
-          return colors[colorIndex-1];
+          fillIndex += 1;
+          return colors[fillIndex + colorScheme]
         })
+        .style('fill-opacity', '0.7')
+        .style('stroke', () => {
+          strokeIndex++;
+          return colors[strokeIndex + colorScheme];
+        })
+        .style('stroke-width', '1.5px');
 
+      colorIndex = 0;
       nodes.append('text')
         .attr('x', (d) => d.x)
         .attr('y', (d) => d.y)
         .attr('text-anchor', 'middle')
         .text((d) => d.tone_name)
-        .style({
-          'fill': 'white',
-          'font-family': '"EB Garamond", serif'
-        })
+        .style('fill', 'white')
+        // .style('fill', () => {
+        //   colorIndex++;
+        //   return colors[colorIndex - 1]
+        // })
+        .style('font-family', '"EB Garamond", serif')
+        .style('font-size', '14px')
     }
 
   }

@@ -1,6 +1,6 @@
 angular.module('smartNews.home')
 
-.controller('PrimaryArticleCtrl', function($scope, TopTrendsFactory, saveArticle, isAuth) {
+.controller('PrimaryArticleCtrl', function($scope, TopTrendsFactory, saveArticle, isAuth, renderWatsonBubbleChart) {
 
   $scope.news = TopTrendsFactory.primaryArticle;
 
@@ -23,5 +23,9 @@ angular.module('smartNews.home')
     };
     saveArticle(article);
   };
+
+  $scope.renderBubbleChart = function(articleData, $event) {
+    renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event)
+  }
 
 });

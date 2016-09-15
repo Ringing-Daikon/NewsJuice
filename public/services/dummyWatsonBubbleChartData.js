@@ -1,4 +1,4 @@
-window.data = {
+window.watsonData = {
   "document_tone": {
     "tone_categories": [{
       "tones": [{
