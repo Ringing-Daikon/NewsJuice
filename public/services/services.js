@@ -31,8 +31,6 @@ angular.module('smartNews.services', ['ngCookies'])
 
     var button = angular.element(event.target)
 
-    // var data = data.document_tone.tone_categories[0].tones;
-
     // If a bubbleChart has already been rendered for that article,
     // don't render another one.
     if (!button.hasClass('inactive')) {
