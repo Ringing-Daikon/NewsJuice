@@ -11,7 +11,7 @@ angular.module('smartNews', [
   'ui.bootstrap'
 ])
 
-.config(function($urlRouterProvider, $stateProvider, $httpProvider) {
+.config(function($urlRouterProvider, $stateProvider, $httpProvider, $locationProvider) {
 
   $stateProvider
     .state('main', {
@@ -42,6 +42,7 @@ angular.module('smartNews', [
 
   $urlRouterProvider.otherwise('/main/home');
   $httpProvider.interceptors.push('requestCookie');
+  $locationProvider.html5Mode(true);
 })
 .factory('requestCookie', function ($document, $cookies) {
   // console.log('this factory');
