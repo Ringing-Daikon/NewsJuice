@@ -2,14 +2,11 @@
 <div >
   <form ng-submit='addComment()' ng-controller='CommentCtrl'> <!-- ng-submit will disable the default form action and use our function -->
 
-        <!-- AUTHOR -->
-        <div class="form-group">
-            <input type="text" class="form-control input-sm" name="author" ng-model="commentData.author" placeholder="Name">
-        </div>
+
 
         <!-- COMMENT TEXT -->
         <div class="form-group">
-            <input type="text" class="form-control input-lg" name="comment" ng-model="commentData.message" placeholder="Enter Your Comments">
+            <input type="text" class="form-control input-lg" name="text" ng-model="commentData.text" placeholder="Enter Your Comments">
         </div>
 
         <!-- SUBMIT BUTTON -->
@@ -20,13 +17,21 @@
 
         <!-- Display Comments -->
         <div ng-repeat='comment in comments'>
-          <span>{{comment.author}}</span>
-          <span>{{comment.date}}</span>
-          <p>{{comment.message}}</p>
+          <div id="comments-header">
+            <h2 class="comment">
+              {{user.firstname}}&nbsp{{user.lastname}}
+            </h2>
+            <img ng-src="{{user.picture}}">
+          <span>{{comment.text}}</span>
+            <div id="comments-title">
+            </div>
+          </div>
+
+
           <span><a href='#' ng-click='deleteComment' class='text-muted'>Delete</a></span>
+
+
           <span><a href='#' ng-click='shareComment' class='text-muted'>Share</a></span>
         </div>
-
-
     </form>
 </div>

@@ -1,25 +1,13 @@
 angular.module('smartNews.home')
 
-.controller('CommentCtrl', function($scope, $http, isAuth, Comment) {
+.controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
 
-  $scope.profile = 'Hi this is the comments page';
 
-  // $scope.comments = [
-  // { date: 'Sept, 14th 2016',
-  //   author: 'Mike',
-  //   message: 'Message Me!'
-  // },
-  // { date: 'Sept, 14th 2016',
-  //   author: 'Brad',
-  //   message: 'Message You!'
-  // },
-  // { date: 'Sept, 14th 2016',
-  //   author: 'Mike',
-  //   message: 'We made it!'
-  // }
-  // ];
+
 
   $scope.commentData = {};
+
+
 
   Comment.get()
     .success(function(data) {
@@ -27,38 +15,32 @@ angular.module('smartNews.home')
     });
 
 
-  console.log($scope.commentData);
-  console.log($scope.comments);
   //Grab form data for a new comment
   //  grab user data to also send with comment
 
-  // PROB NEED THIS BUT WHY?
-  // $scope.user = isAuth();
+  // USER INFO
+  $scope.user = isAuth();
+  console.log($scope.user);
 
-  //  $scope.isAuth = function() {
-  //   $scope.user = isAuth();
-  //   return !!isAuth();
-  // };
+  // Primary Article Info
+  $scope.news = TopTrendsFactory.primaryArticle;
 
+
+  // $scope.url = '/' + $scope.news[0].id + '/comments';
 
   // need FB ID
   $scope.addComment = function() {
 
-    Comment.save($scope.commentData)
+    Comment.save($scope.commentData, $scope.user, $scope.news)
       .success(function(data) {
-        Comment.get()
-          .success(function(getData) {
-            $scope.comments = getData;
-          });
+        $scope.comments.push(data);
+        console.log($scope.news[0].title);
       })
       .error(function(err) {
         console.log(err);
       });
 
   };
-
-
-
 
   $scope.deleteComment = function() {
 

@@ -270,26 +270,32 @@ angular.module('smartNews.services', ['ngCookies'])
   };
 })
 
-.factory('Comment', function($http, $httpParamSerializer) {
+.factory('Comment', function($http) {
+  var url = '/' + 'articleID' + '/comments';
 
   return {
-
     get: function() {
-      return $http.get('/id:/comments');
+      return $http.get('/20294138/comments');
     },
 
-    save: function(commentData) {
+    save: function(commentData, user, news) {
+      var url = '/' + news[0].id + '/comments';
       return $http({
+
         method: 'POST',
-        url: '/id:/comments',
+        url: url,
         //  $httpParamSerializer
-        data: $httpParamSerializer(commentData)
+        // data: $httpParamSerializer(commentData)
+        data: {
+
+          text: commentData.text
+        }
       });
 
     },
 
     delete: function(commentId) {
-      return $http('/id:/comments' + commentId);
+      return $http('/id:/comments' + _facebookUniqueID);
     }
 
 
