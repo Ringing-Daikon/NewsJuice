@@ -5,13 +5,13 @@ const passport = require('./passport.js');
 const aylien = require('../news-apis/aylien-helpers.js');
 const googleTrends = require('../news-apis/google-trends-helpers.js');
 /***CONTROLLERS***/
-const user = require('../db/user.controller.js'); 
+const user = require('../db/user.controller.js');
 const comment = require('../db/comment.controller.js');
 const watson = require('../db/watson.controller.js');
 /***AUTOCOMPLETE***/
-router.get('/input/:input', (req, res) => require('request')(`https://en.wikipedia.org/w/api.php?action=query&format=json&generator=prefixsearch&prop=pageprops%7Cpageimages%7Cpageterms&redirects=&ppprop=displaytitle&piprop=thumbnail&pithumbsize=80&pilimit=5&wbptterms=description&gpssearch=${req.params.input}&gpsnamespace=0&gpslimit=5`, 
-    (err, resp, body) => err ? 
-      res.status(500).send(err) 
+router.get('/input/:input', (req, res) => require('request')(`https://en.wikipedia.org/w/api.php?action=query&format=json&generator=prefixsearch&prop=pageprops%7Cpageimages%7Cpageterms&redirects=&ppprop=displaytitle&piprop=thumbnail&pithumbsize=80&pilimit=5&wbptterms=description&gpssearch=${req.params.input}&gpsnamespace=0&gpslimit=5`,
+    (err, resp, body) => err ?
+      res.status(500).send(err)
       : res.status(200).send(body)
     )
   );
@@ -34,6 +34,7 @@ router.get('/seearticle', (req, res) => {
   let q = req.query; 
   aylien.articleImport(q.input, res, q.start, q.end, q.limit);
 });
+
 /***GOOGLE TRENDS***/
 // Top trends pull top # of trends from specified country
   // googleTrends.hotTrends(resultLimit, country, res)
@@ -46,7 +47,7 @@ router.post('/article', user.saveArticle);
 router.delete('/unsaveArticle/:id', user.unsaveArticle);
 router.get('/profile', user.getProfile);
 /***COMMENT HANDLING***/
-router.route('/:id/comments')
+router.route('/comments/:id')
   .get(comment.getComments)
   .post(comment.postComment)
   .put(comment.editComment)
