@@ -11,7 +11,7 @@
 angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope) {
-  
+
   //dummy data for testing
   var data = window.data;
 
@@ -218,6 +218,7 @@ angular.module('smartNews.services', ['ngCookies'])
     if (auth && auth !== 'undefined') {
       var parsedAuth = JSON.parse(auth.slice(2)).user;
       return {
+        _facebookUniqueID: parsedAuth._facebookUniqueID,
         firstname: parsedAuth.firstname,
         lastname: parsedAuth.lastname,
         picture: parsedAuth.picture,
@@ -271,11 +272,15 @@ angular.module('smartNews.services', ['ngCookies'])
 })
 
 .factory('Comment', function($http) {
-  var url = '/' + 'articleID' + '/comments';
+
 
   return {
-    get: function() {
-      return $http.get('/20294138/comments');
+    get: function(news) {
+      // var url = '/' + news[0].id + '/comments';
+      return $http({
+        method: 'GET',
+        url: '/20507927/comments',
+      });
     },
 
     save: function(commentData, user, news) {
@@ -284,18 +289,17 @@ angular.module('smartNews.services', ['ngCookies'])
 
         method: 'POST',
         url: url,
-        //  $httpParamSerializer
-        // data: $httpParamSerializer(commentData)
         data: {
           id: news[0].id,
+          _facebookUniqueID: user._facebookUniqueID,
           text: commentData.text
         }
       });
 
     },
 
-    delete: function(commentId) {
-      return $http('/id:/comments' + _facebookUniqueID);
+    delete: function(commentID) {
+      return $http(commentID);
     }
 
 

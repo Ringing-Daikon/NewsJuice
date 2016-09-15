@@ -3,20 +3,8 @@ angular.module('smartNews.home')
 .controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
 
 
-
-
   $scope.commentData = {};
 
-
-
-  Comment.get()
-    .success(function(data) {
-      $scope.comments = data;
-    });
-
-
-  //Grab form data for a new comment
-  //  grab user data to also send with comment
 
   // USER INFO
   $scope.user = isAuth();
@@ -25,16 +13,21 @@ angular.module('smartNews.home')
   // Primary Article Info
   $scope.news = TopTrendsFactory.primaryArticle;
 
+  $scope.getComments = function() {
+    Comment.get($scope.news)
+        .success(function(data) {
+          $scope.comments = data;
+        });
+  };
 
-  // $scope.url = '/' + $scope.news[0].id + '/comments';
+  $scope.getComments();
 
-  // need FB ID
   $scope.addComment = function() {
 
     Comment.save($scope.commentData, $scope.user, $scope.news)
       .success(function(data) {
         $scope.comments.push(data);
-        console.log($scope.news[0].title);
+        console.log($scope.news[0]);
       })
       .error(function(err) {
         console.log(err);
@@ -42,7 +35,11 @@ angular.module('smartNews.home')
 
   };
 
-  $scope.deleteComment = function() {
+  $scope.deleteComment = function(commentID) {
 
+    Comment.delete(commentId)
+      .success(function(data) {
+        console.log('deleted', data);
+      });
   };
 });
