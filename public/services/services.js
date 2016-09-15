@@ -10,10 +10,25 @@
 
 angular.module('smartNews.services', ['ngCookies'])
 
-.factory('renderWatsonBubbleChart', function($rootScope) {
-
+.factory('renderWatsonBubbleChart', function($rootScope, $http) {
+  
   //dummy data for testing
   var data = window.data;
+
+  /* 
+    returns a promise that will return tone analysis data for
+    the given string input.
+  */
+  var analyzeText = (text) => {
+    var data = {text};
+    return $http.post('/toneAnalysis', data)
+      .then((response)=>{
+        return response.data;
+      }, (error)=>{
+        console.log(error);
+        return null;
+      });
+  };
 
   renderWatsonBubbleChart = function(event, articleData) {
     console.log(data)

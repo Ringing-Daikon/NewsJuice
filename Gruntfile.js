@@ -1,4 +1,6 @@
-var nodeModules = 'public/node_modules';
+const nodeModules = 'public/node_modules';
+const features = 'public/features';
+
 module.exports = function(grunt) {
 
   grunt.initConfig({
@@ -28,30 +30,44 @@ module.exports = function(grunt) {
           `${nodeModules}/angular-ui-bootstrap/dist/ui-bootstrap.js`,
           `${nodeModules}/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js`,
           'public/services/services.js',
-          'public/features/results/results.js',
-          'public/features/home/home.js',
-          'public/features/home/trends.js',
-          'public/features/home/primaryArticle.js',
-          'public/features/profile/profile.js',
+          `${features}/results/results.js`,
+          `${features}/home/home.js`,
+          `${features}/home/trends.js`,
+          `${features}/home/primaryArticle.js`,
+          `${features}/profile/profile.js`,
           'public/layout.js',
-          'public/features/nav/nav.js'
+          `${features}/nav/nav.js`,
+          `${features}/home/comments.js`
 
         ],
         dest: 'public/dist/bundle.js'
       }
     },
 
-    uglify: {
+    shell: {
+      prodServer: {
+        command: 'ng-annotate -a public/dist/bundle.js > public/dist/bundle.annotate.js',
+      }
+    },
+
+    babel: {
+      options: {
+        sourceMap: true,
+        presets: ['es2015'],
+        compact: false
+      },
       dist: {
         files: {
-          'public/dist/bundle.min.js': ['public/dist/bundle.annotate.js']
+          'public/dist/bundle.trans.js': 'public/dist/bundle.annotate.js'
         }
       }
     },
 
-    shell: {
-      prodServer: {
-        command: 'ng-annotate -a public/dist/bundle.js > public/dist/bundle.annotate.js',
+    uglify: {
+      dist: {
+        files: {
+          'public/dist/bundle.min.js': ['public/dist/bundle.trans.js']
+        }
       }
     },
 
@@ -70,7 +86,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: [
-          'public/features/**/*.js',
+          `${features}/**/*.js`,
           'public/services/**/*.js',
           'public/layout.js',
           'public/styles/style.css'
@@ -84,11 +100,12 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   ////////////////////////////////////////////////////
   // Main grunt tasks
@@ -100,8 +117,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'concat',
-    'shell',
-    'uglify',
+    // 'shell',
+    // 'babel',
+    // 'uglify',
     'cssmin'
   ]);
 
