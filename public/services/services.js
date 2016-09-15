@@ -11,7 +11,7 @@
 angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope) {
-  
+
   //dummy data for testing
   var data = window.data;
 
@@ -218,6 +218,7 @@ angular.module('smartNews.services', ['ngCookies'])
     if (auth && auth !== 'undefined') {
       var parsedAuth = JSON.parse(auth.slice(2)).user;
       return {
+        _facebookUniqueID: parsedAuth._facebookUniqueID,
         firstname: parsedAuth.firstname,
         lastname: parsedAuth.lastname,
         picture: parsedAuth.picture,
@@ -230,10 +231,10 @@ angular.module('smartNews.services', ['ngCookies'])
 .factory('saveArticle', function($http) {
   return function(article) {
     $http({
-        method: 'POST',
-        data: article,
-        url: '/article'
-      })
+      method: 'POST',
+      data: article,
+      url: '/article'
+    })
       .then(function(data) {
         console.log('success posting', data);
       });
@@ -247,7 +248,7 @@ angular.module('smartNews.services', ['ngCookies'])
       method: 'DELETE',
       url: url
     })
-    .then(function(data){
+    .then(function(data) {
       console.log('success deleting', data);
       cb();
     });
@@ -260,8 +261,8 @@ angular.module('smartNews.services', ['ngCookies'])
       method: 'GET',
       url: '/profile'
     })
-    .then(function(data){
-      data.data.forEach(function(e){
+    .then(function(data) {
+      data.data.forEach(function(e) {
         e.formattedPublishDate = moment(e.publishDate).format('MMM DD YYYY');
         e.formattedSavedDate = moment(e.savedDate).format('MMM DD YYYY');
       });
@@ -269,6 +270,84 @@ angular.module('smartNews.services', ['ngCookies'])
     });
   };
 })
+
+.factory('Comment', function($http) {
+
+
+  return {
+    get: function(news) {
+      // var url = '/' + news[0].id + '/comments';
+      return $http({
+        method: 'GET',
+        url: '/20507927/comments',
+      });
+    },
+
+    save: function(commentData, user, news) {
+      var url = '/' + news[0].id + '/comments';
+      return $http({
+        method: 'POST',
+        url: url,
+        data: {
+          id: news[0].id,
+          _facebookUniqueID: user._facebookUniqueID,
+          text: commentData.text
+        }
+      });
+
+    },
+
+    delete: function(commentID) {
+      return $http({
+        method: 'DELETE',
+        url: '/' + commentID + '/comments'
+      });
+    }
+
+
+  };
+})
+
+
+/////////////////////////////////////////////////////////////
+  // IN PROGRESS
+/////////////////////////////////////////////////////////////
+
+// .factory('getAllComments', function($http) {
+//   return function(cb) {
+//     $http({
+//       method: 'GET',
+//       url: '/comment'
+//     })
+//     .then(function(data) {
+//       //////
+//     //CONFIG THIS DATA FOR COMMENTS
+//       /////
+//       data.data.forEach(function(e) {
+//         e.formattedPublishDate = moment(e.publishDate).format('MMM DD YYYY');
+//         e.formattedSavedDate = moment(e.savedDate).format('MMM DD YYYY');
+//       });
+//       cb(data.data);
+//     });
+//   };
+
+// })
+
+
+// .factory('saveComment', function($http) {
+//   return function(comment) {
+//     $http({
+//       method: 'POST',
+//       data: $.params(comment),
+//       url: '/comment'
+//     })
+//     .then(function(data) {
+//       console.log('Success posting a comment', data);
+//     });
+//   };
+// })
+
+
 
 .factory('TopTrendsFactory', function($http, $sanitize) {
   var topTrends = [];
@@ -291,9 +370,9 @@ angular.module('smartNews.services', ['ngCookies'])
 
     var url = '/seearticle?input=' + topic + '&start=' + publishStart + '&end=' + publishEnd + '&limit=1';
     return $http({
-        method: 'GET',
-        url: url
-      })
+      method: 'GET',
+      url: url
+    })
       .then(function(article) {
         return article;
       });
@@ -301,9 +380,9 @@ angular.module('smartNews.services', ['ngCookies'])
 
   var topTrendsGoogleTrends = function() {
     return $http({
-        method: 'GET',
-        url: '/api/news/topTrendsDetail'
-      })
+      method: 'GET',
+      url: '/api/news/topTrendsDetail'
+    })
       .then(function(response) {
         response.data.forEach(function(topic, index) {
           if (index === 0) {
@@ -338,6 +417,18 @@ angular.module('smartNews.services', ['ngCookies'])
     sanitizeTitle: sanitizeTitle
   };
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

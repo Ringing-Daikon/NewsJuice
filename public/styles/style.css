@@ -54,6 +54,10 @@ h2.top {
   font-size: 36px;
 }
 
+h2.comment {
+  font-size: 16px;
+}
+
 h2.bot {
   font-size: 24px;
 }
@@ -351,6 +355,23 @@ div.tooltip-articles {
   width: 100%;
   padding-top: 15px;
   margin-top: 10px;
+}
+
+#comments-header {
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
+}
+
+#comments-header > img {
+  width: 45px;
+  margin: 20px 20px 20px 0;
+  border-radius: 8px;
+}
+
+#comments-title {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 20px;
 }
 
 .search-history-saveddate {
