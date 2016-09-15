@@ -12,7 +12,6 @@ angular.module('smartNews.results', [])
   };
 
   $scope.renderBubbleChart = function(articleData, $event) {
-    console.log('ARTICLE DATA:    ', articleData);
     renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event)
   }
 

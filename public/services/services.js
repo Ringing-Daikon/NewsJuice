@@ -27,15 +27,11 @@ angular.module('smartNews.services', ['ngCookies'])
       });
   };
 
-  renderWatsonBubbleChart = function(event, articleData) {
-
-    console.log('article data', articleData);
+  renderWatsonBubbleChart = function(articleData, event) {
 
     var button = angular.element(event.target)
 
-    var data = window.watsonData; // replace this line with the data from actual API
-    
-    var data = data.document_tone.tone_categories[0].tones;
+    // var data = data.document_tone.tone_categories[0].tones;
 
     // If a bubbleChart has already been rendered for that article,
     // don't render another one.
@@ -43,105 +39,95 @@ angular.module('smartNews.services', ['ngCookies'])
       button.addClass('inactive');
 
       // Send article body to watson, get data back.
-      // analyzeText(articleData.body)
+      analyzeText(articleData.body)
+        .then((responseData) => {
+          var data = responseData.document_tone.tone_categories[0].tones;
+          
+          // SVG box dimensions:
+          var width = 400,
+              height = 250;
+
+          for (var i = 0; i < data.length; i++) {
+            data[i].r = data[i].score * 100;
+          }
+
+          // packSiblings takes in data with an 'r' (radius)
+          // property, and generates 'x' and 'y' properties
+          // on each item that will reflect their position
+          // on the bubble chart.
+          var circles = d3.packSiblings(data);
+
+          // create svg container with slide-down effect
+          var svg = d3.select(event.path[3])
+            .insert('svg', '.article-body')
+            .attr('width', 0)
+            .attr('height', 0)
+            .attr('class', 'article-bubble-chart');
+          svg.transition()
+            .duration(200)
+            .attr('width', width)
+            .attr('height', height);
+
+          // set up the bubble chart
+          var nodes = svg.append('g')
+            .attr('transform', 'translate(200, 130)')
+            .selectAll('.bubble')
+            .data(circles)
+            .enter();
+
+          // render the bubbles
+          var bubble = nodes.append('circle')
+            .attr('r', 0)
+            .transition()
+              .duration(500)
+              .attr('r', (d) => {
+                return d.r - 0.5;
+              })
+
+          //increment the colorIndex to pick a different color for each bubble.
+          
+          var strokeIndex = 0;
+          var fillIndex = 0;
+
+          // var colors = d3.schemeCategory20;
+          var colors = {
+            anger: '#E80521',
+            disgust: '#592684',
+            fear: '#325E2B',
+            joy: '#FFD629',
+            sadness: '#086DB2'
+          }
+          var colorScheme = 0;
+          var bubbleOpacity = .7;
+          var strokeOpacity = 1;
+
+          // for schemeCategory20b : 12, 16, 8, 4, 0
+          var selectColor = function(id) {
+            return colors[id]
+          }
+
+          bubble.attr('cx', (d) => d.x)
+            .attr('cy', (d) => d.y - 5)
+            .style('fill', (d) => selectColor(d.tone_id))
+            .style('fill-opacity', bubbleOpacity)
+            .style('stroke', 'white')
+            .style('stroke-width', '1.5px')
+            .style('stroke-opacity', strokeOpacity);
+
+          colorIndex = 0;
+          nodes.append('text')
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => d.y)
+            .attr('text-anchor', 'middle')
+            .text((d) => d.tone_name)
+            .style('fill', 'white')
+            .style('font-family', '"Karla", regular')
+            .style('font-size', '12px')
+        })
 
 
-
-      // dimensions of SVG component and colors array
-      var width = 240,
-          height = 240;
 
       
-      for (var i = 0; i < data.length; i++) {
-        data[i].r = data[i].score * 150;
-      }
-
-      // packSiblings takes in data with an 'r' (radius)
-      // property, and generates 'x' and 'y' properties
-      // on each item that will reflect their position
-      // on the bubble chart.
-      var circles = d3.packSiblings(data);
-
-      // create svg container with slide-down effect
-      var svg = d3.select(event.path[3])
-        .insert('svg', '.article-subheading')
-        .attr('width', 0)
-        .attr('height', 0)
-        .attr('class', 'article-bubble-chart');
-      svg.transition()
-        .duration(200)
-        .attr('width', width)
-        .attr('height', height);
-
-      // set up the bubble chart
-      //
-      var nodes = svg.append('g')
-        .attr('transform', 'translate(130, 130)')
-        .selectAll('.bubble')
-        .data(circles)
-        .enter();
-
-
-      // render the bubbles
-      var bubble = nodes.append('circle')
-        .attr('r', 0)
-        .transition()
-          .duration(500)
-          .attr('r', (d) => {
-            return d.r - 0.5;
-          })
-
-      //increment the colorIndex to pick a different color for each bubble.
-      
-      var strokeIndex = 0;
-      var fillIndex = 0;
-
-      // var colors = d3.schemeCategory20;
-      var colors = {
-        anger: '#E80521',
-        disgust: '#592684',
-        fear: '#325E2B',
-        joy: '#FFD629',
-        sadness: '#086DB2'
-      }
-      var colorScheme = 0;
-      var bubbleOpacity = .8;
-      var strokeOpacity = 1;
-
-      // for schemeCategory20b : 12, 16, 8, 4, 0
-      var selectColor = function(id) {
-        return colors[id]
-      }
-
-      bubble.attr('cx', (d) => d.x)
-        .attr('cy', (d) => d.y - 5)
-        .style('fill', (d) => {
-          return selectColor(d.tone_id);
-          // fillIndex += 1;
-          // return colors[fillIndex + colorScheme]
-        })
-        .style('fill-opacity', bubbleOpacity)
-        .style('stroke', (d) => {
-          // return colorScheme(d.tone_id);
-          strokeIndex++;
-          return colors[strokeIndex + colorScheme];
-        })
-        .style('stroke-width', '1.5px')
-        .style('stroke-opacity', strokeOpacity);
-
-      colorIndex = 0;
-      nodes.append('text')
-        .attr('x', (d) => d.x)
-        .attr('y', (d) => d.y)
-        .attr('text-anchor', 'middle')
-        .text((d) => d.tone_name)
-        .style('fill', 'white')
-        // .style('fill', () => {
-        //   colorIndex++;
-        //   return colors[colorIndex - 1]
-        // })
-        .style('font-family', '"Karla", regular')
-        .style('font-size', '12px')
     }
 
   }
