@@ -30,6 +30,7 @@ angular.module('smartNews.services', ['ngCookies'])
   renderWatsonBubbleChart = function(articleData, event) {
 
     var button = angular.element(event.target)
+    console.log(articleData);
 
     // var data = data.document_tone.tone_categories[0].tones;
 

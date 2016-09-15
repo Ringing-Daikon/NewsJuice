@@ -25,7 +25,8 @@ angular.module('smartNews.home')
   };
 
   $scope.renderBubbleChart = function(articleData, $event) {
-    renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event)
+    articleData = articleData ? articleData : $scope.news[0];
+    renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event);
   }
 
 });
