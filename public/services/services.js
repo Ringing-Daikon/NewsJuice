@@ -287,7 +287,7 @@ angular.module('smartNews.services', ['ngCookies'])
         //  $httpParamSerializer
         // data: $httpParamSerializer(commentData)
         data: {
-
+          id: news[0].id,
           text: commentData.text
         }
       });
