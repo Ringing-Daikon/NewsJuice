@@ -43,8 +43,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
       // dimensions of SVG component and colors array
       var width = 240,
-          height = 240,
-          colors    = d3.schemeCategory20;
+          height = 240;
 
       
       for (var i = 0; i < data.length; i++) {
@@ -87,22 +86,42 @@ angular.module('smartNews.services', ['ngCookies'])
           })
 
       //increment the colorIndex to pick a different color for each bubble.
+      
       var strokeIndex = 0;
       var fillIndex = 0;
+
+      // var colors = d3.schemeCategory20;
+      var colors = {
+        anger: '#E80521',
+        disgust: '#592684',
+        fear: '#325E2B',
+        joy: '#FFD629',
+        sadness: '#086DB2'
+      }
       var colorScheme = 0;
+      var bubbleOpacity = 1;
+      var strokeOpacity = 1;
+
+      // for schemeCategory20b : 12, 16, 8, 4, 0
+      var selectColor = function(id) {
+        return colors[id]
+      }
 
       bubble.attr('cx', (d) => d.x)
         .attr('cy', (d) => d.y - 5)
-        .style('fill', () => {
-          fillIndex += 1;
-          return colors[fillIndex + colorScheme]
+        .style('fill', (d) => {
+          return selectColor(d.tone_id);
+          // fillIndex += 1;
+          // return colors[fillIndex + colorScheme]
         })
-        .style('fill-opacity', '0.7')
-        .style('stroke', () => {
+        .style('fill-opacity', bubbleOpacity)
+        .style('stroke', (d) => {
+          // return colorScheme(d.tone_id);
           strokeIndex++;
           return colors[strokeIndex + colorScheme];
         })
-        .style('stroke-width', '1.5px');
+        .style('stroke-width', '1.5px')
+        .style('stroke-opacity', strokeOpacity);
 
       colorIndex = 0;
       nodes.append('text')
@@ -115,8 +134,8 @@ angular.module('smartNews.services', ['ngCookies'])
         //   colorIndex++;
         //   return colors[colorIndex - 1]
         // })
-        .style('font-family', '"EB Garamond", serif')
-        .style('font-size', '14px')
+        .style('font-family', '"Karla", regular')
+        .style('font-size', '12px')
     }
 
   }
