@@ -19,7 +19,6 @@ angular.module('smartNews.home')
           $scope.comments = data;
         });
   };
-
   $scope.getComments();
 
   $scope.addComment = function() {
@@ -37,9 +36,10 @@ angular.module('smartNews.home')
 
   $scope.deleteComment = function(commentID) {
 
-    Comment.delete(commentId)
+    Comment.delete(commentID)
       .success(function(data) {
         console.log('deleted', data);
       });
+    $scope.getComments();
   };
 });

@@ -286,7 +286,6 @@ angular.module('smartNews.services', ['ngCookies'])
     save: function(commentData, user, news) {
       var url = '/' + news[0].id + '/comments';
       return $http({
-
         method: 'POST',
         url: url,
         data: {
@@ -299,7 +298,10 @@ angular.module('smartNews.services', ['ngCookies'])
     },
 
     delete: function(commentID) {
-      return $http(commentID);
+      return $http({
+        method: 'DELETE',
+        url: '/' + commentID + '/comments'
+      });
     }
 
 
