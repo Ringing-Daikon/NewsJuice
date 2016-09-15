@@ -35,7 +35,8 @@ angular.module('smartNews.services', ['ngCookies'])
       button.addClass('inactive');
 
 
-      var diameter = 500,
+      var width = 1100,
+          height = 300,
           format   = d3.format(',d'),
           color    = d3.schemeCategory20;
 
@@ -45,22 +46,13 @@ angular.module('smartNews.services', ['ngCookies'])
       //   .size([diameter, diameter])
       //   .padding(1.5);
 
+      for (var i = 0; i < data.length; i++) {
+        data[i].r = data[i].score * 150;
+      }
+      console.log(data);
+      
 
-      var circles = [
-        {
-          text: 'wendy',
-          r: 50
-        },
-        {
-          text: 'connor',
-          r: 100
-        },
-        {
-          text: 'andrew',
-          r: 150
-        },
-      ]
-      var circles = d3.packSiblings(circles);
+      var circles = d3.packSiblings(data);
 
       // console.log('bubble: ', bubble);
       // create svg container with slide-down effect
@@ -71,19 +63,18 @@ angular.module('smartNews.services', ['ngCookies'])
         .attr('class', 'bubble');
       svg.transition()
         .duration(200)
-        .attr('width', diameter)
-        .attr('height', diameter);
+        .attr('width', width)
+        .attr('height', height);
 
       //set up the chart
       var nodes = svg.append('g')
-        .attr('transform', 'translate(250, 250)')
+        .attr('transform', 'translate(550, 150)')
         .selectAll('.bubble')
         .data(circles)
         .enter();
 
       nodes.append('circle')
         .attr('r', (d) => {
-          console.log(d)
           return d.r;
         })
         .attr('cx', (d) => d.x)
@@ -94,9 +85,10 @@ angular.module('smartNews.services', ['ngCookies'])
         .attr('x', (d) => d.x)
         .attr('y', (d) => d.y)
         .attr('text-anchor', 'middle')
-        .text((d) => d.text)
+        .text((d) => d.tone_name)
         .style({
-          fill: 'white'
+          'fill': 'white',
+
         })
       // bubbles.append('circle')
       //   .attr('r', (d) => d.score * 300)
