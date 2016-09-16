@@ -29,11 +29,16 @@ angular.module('smartNews.services', ['ngCookies'])
 
   renderWatsonBubbleChart = function(articleData, event) {
 
-    var button = angular.element(event.target)
+    var button = angular.element(event.target);
 
     // If a bubbleChart has already been rendered for that article,
     // don't render another one.
-    if (!button.hasClass('inactive')) {
+    if (button.hasClass('inactive')) {
+      button.removeClass('inactive');
+
+      // HANDLE UNRENDERING BUBBLE CHART HERE
+
+    } else {
       button.addClass('inactive');
 
       // Send article body to watson, get data back.
@@ -44,9 +49,10 @@ angular.module('smartNews.services', ['ngCookies'])
           // SVG box dimensions:
           var width = 400,
               height = 250;
-
+          var rTotal = 0;
           for (var i = 0; i < data.length; i++) {
             data[i].r = data[i].score * 100;
+            rTotal += data[i].r;
           }
 
           // packSiblings takes in data with an 'r' (radius)
@@ -80,7 +86,7 @@ angular.module('smartNews.services', ['ngCookies'])
               .duration(500)
               .attr('r', (d) => {
                 return d.r - 0.5;
-              })
+              });
 
           //increment the colorIndex to pick a different color for each bubble.
           
