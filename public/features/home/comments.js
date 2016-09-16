@@ -3,7 +3,7 @@ angular.module('smartNews.home')
 .controller('CommentCtrl', function($timeout, $scope, $http, isAuth, Comment, TopTrendsFactory) {
 
 
-  $scope.commentData = {};
+   $scope.commentData = {};
 
 
   // USER INFO
