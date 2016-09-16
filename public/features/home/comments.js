@@ -1,6 +1,6 @@
 angular.module('smartNews.home')
 
-.controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
+.controller('CommentCtrl', function($timeout, $scope, $http, isAuth, Comment, TopTrendsFactory) {
 
 
   $scope.commentData = {};
@@ -8,37 +8,46 @@ angular.module('smartNews.home')
 
   // USER INFO
   $scope.user = isAuth();
-  console.log($scope.user);
 
   // Primary Article Info
-  $scope.news = TopTrendsFactory.primaryArticle;
+  $scope.articleID = TopTrendsFactory.primaryArticle;
+  // console.log($scope.articleID[0]);
 
   $scope.getComments = function() {
-    Comment.get($scope.news)
+    // TopTrendsFactory.getComments();
+    // console.log($scope.articleID[0]);
+    Comment.get($scope.articleID)
         .success(function(data) {
           $scope.comments = data;
         });
   };
-  $scope.getComments();
+
+  $timeout(function() {
+    $scope.getComments();
+  }, 2000);
+
 
   $scope.addComment = function() {
 
-    Comment.save($scope.commentData, $scope.user, $scope.news)
+    Comment.save($scope.commentData, $scope.user, $scope.articleID)
       .success(function(data) {
         $scope.comments.push(data);
-        console.log($scope.news[0]);
       })
       .error(function(err) {
-        console.log(err);
+        console.error(err);
       });
 
   };
+ // ), 1000}
 
   $scope.deleteComment = function(commentID) {
-
+    console.log(commentID)
     Comment.delete(commentID)
       .success(function(data) {
         console.log('deleted', data);
+      })
+      .error(function(err) {
+        console.log(err);
       });
     $scope.getComments();
   };
