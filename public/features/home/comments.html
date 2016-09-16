@@ -1,6 +1,8 @@
-<h3>Comments</h3>
+<!-- <h3>Comments</h3> -->
 <div >
-  <form ng-submit='addComment()' ng-controller='CommentCtrl'> <!-- ng-submit will disable the default form action and use our function -->
+  <form name='comments' ng-submit='addComment()' ng-controller='CommentCtrl'> <!-- ng-submit will disable the default form action and use our function -->
+
+        <!-- Hide Comment Text Box  And Get Saved Comments-->
 
         <!-- COMMENT TEXT -->
         <div class="form-group">
@@ -12,6 +14,10 @@
           <button type="submit" class="btn btn-default">Submit</button>
         </div>
 
+       <!--  <div ng-click='getSavedComments()' class="topTrends article-title text-right">
+          <span type="submit" class="btn btn-default">See Comments</span>
+        </div>
+ -->
 
         <!-- Display Comments in Reverse Order -->
         <div ng-repeat='comment in comments.slice().reverse()'>
@@ -23,13 +29,15 @@
           <span>{{comment.text}}</span>
             <div id="comments-title">
             </div>
+          <div><a href='#' ng-click='deleteComment(comment._id); $event.preventDefault()' class='text-muted'>Delete</a></div>
           </div>
 
 
-          <span><a href='#' ng-click='deleteComment(comment._id); $event.preventDefault()' class='text-muted'>Delete</a></span>
 
 
-          <span><a href='#' ng-click='shareComment' class='text-muted'>Share</a></span>
+
+<!--
+          <span><a href='#' ng-click='editComment' class='text-muted'>Edit</a></span> -->
         </div>
     </form>
 </div>

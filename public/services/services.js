@@ -357,10 +357,11 @@ angular.module('smartNews.services', ['ngCookies'])
 
 .factory('Comment', function($http) {
 
-
   return {
-    get: function(articleID) {
-      var url = '/comments/' + articleID[0].id;
+    get: function(article) {
+      // console.log(articleID);
+      // console.log(article[0].id);
+      var url = '/comments/' + article[0].id;
       // console.log(articleID);
       return $http({
         method: 'GET',
@@ -369,13 +370,13 @@ angular.module('smartNews.services', ['ngCookies'])
 
     },
 
-    save: function(commentData, user, articleID) {
-      var url = '/comments/' + articleID[0].id;
+    save: function(commentData, user, article) {
+      var url = '/comments/' + article[0].id;
       return $http({
         method: 'POST',
         url: url,
         data: {
-          id: articleID[0].id,
+          id: article[0].id,
           _facebookUniqueID: user._facebookUniqueID,
           text: commentData.text
         }

@@ -10,28 +10,45 @@ angular.module('smartNews.home')
   $scope.user = isAuth();
 
   // Primary Article Info
-  $scope.articleID = TopTrendsFactory.primaryArticle;
+  $scope.article = TopTrendsFactory.primaryArticle;
 
 
-  $scope.getComments = function() {
+  // $scope.getComments = function() {
 
-    Comment.get($scope.articleID)
+  //   Comment.get($scope.article)
+  //       .success(function(data) {
+  //         $scope.comments = data;
+  //       });
+  // };
+
+  // $timeout(function() {
+  //   $scope.getComments();
+  // }, 2000);
+
+  $scope.getSavedComments = function() {
+    // $scope.comments = null;
+    Comment.get($scope.article)
         .success(function(data) {
           $scope.comments = data;
         });
   };
 
   $timeout(function() {
-    $scope.getComments();
+    $scope.getSavedComments();
   }, 2000);
+
+  setInterval(function() {
+    $scope.getSavedComments();
+  }, 750);
 
 
   $scope.addComment = function() {
 
-    Comment.save($scope.commentData, $scope.user, $scope.articleID)
+    Comment.save($scope.commentData, $scope.user, $scope.article)
       .success(function(data) {
         $scope.comments.push(data);
-        // console.log($scope.articleID[0]);
+        $scope.commentData.text = '';
+        // console.log($scope.article[0]);
       })
       .error(function(err) {
         console.log(err);
@@ -43,11 +60,12 @@ angular.module('smartNews.home')
   $scope.deleteComment = function(commentID) {
     // console.log(commentID);
     Comment.delete(commentID)
-      .success(function(data) {
-        console.log('deleted', data);
-      })
+      // .success(function(data) {
+      //   // console.log('deleted', data);
+      // })
       .error(function(err) {
         console.log(err);
       });
+    $scope.getSavedComments();
   };
 });
