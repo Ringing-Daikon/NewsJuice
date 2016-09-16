@@ -11,8 +11,16 @@
 angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope, $http) {
-  
-  /* 
+
+
+  /*
+=======
+
+  //dummy data for testing
+  var data = window.data;
+
+  /*
+>>>>>>> pre-merge commit
     returns a promise that will return tone analysis data for
     the given string input.
   */
@@ -45,7 +53,7 @@ angular.module('smartNews.services', ['ngCookies'])
       analyzeText(articleData.body)
         .then((responseData) => {
           var data = responseData.document_tone.tone_categories[0].tones;
-          
+
           // SVG box dimensions:
           var width = 400,
               height = 250;
@@ -89,7 +97,7 @@ angular.module('smartNews.services', ['ngCookies'])
               });
 
           //increment the colorIndex to pick a different color for each bubble.
-          
+
           var strokeIndex = 0;
           var fillIndex = 0;
 
@@ -128,7 +136,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
 
 
-      
+
     }
 
   }
@@ -349,23 +357,26 @@ angular.module('smartNews.services', ['ngCookies'])
 
 .factory('Comment', function($http) {
 
-
   return {
-    get: function(news) {
-      // var url = '/' + news[0].id + '/comments';
+    get: function(article) {
+      // console.log(articleID);
+      // console.log(article[0].id);
+      var url = '/comments/' + article[0].id;
+      // console.log(articleID);
       return $http({
         method: 'GET',
-        url: '/20507927/comments',
+        url: url,
       });
+
     },
 
-    save: function(commentData, user, news) {
-      var url = '/' + news[0].id + '/comments';
+    save: function(commentData, user, article) {
+      var url = '/comments/' + article[0].id;
       return $http({
         method: 'POST',
         url: url,
         data: {
-          id: news[0].id,
+          id: article[0].id,
           _facebookUniqueID: user._facebookUniqueID,
           text: commentData.text
         }
@@ -376,54 +387,12 @@ angular.module('smartNews.services', ['ngCookies'])
     delete: function(commentID) {
       return $http({
         method: 'DELETE',
-        url: '/' + commentID + '/comments'
+        url: '/comments/' + commentID
       });
     }
 
-
   };
 })
-
-
-/////////////////////////////////////////////////////////////
-  // IN PROGRESS
-/////////////////////////////////////////////////////////////
-
-// .factory('getAllComments', function($http) {
-//   return function(cb) {
-//     $http({
-//       method: 'GET',
-//       url: '/comment'
-//     })
-//     .then(function(data) {
-//       //////
-//     //CONFIG THIS DATA FOR COMMENTS
-//       /////
-//       data.data.forEach(function(e) {
-//         e.formattedPublishDate = moment(e.publishDate).format('MMM DD YYYY');
-//         e.formattedSavedDate = moment(e.savedDate).format('MMM DD YYYY');
-//       });
-//       cb(data.data);
-//     });
-//   };
-
-// })
-
-
-// .factory('saveComment', function($http) {
-//   return function(comment) {
-//     $http({
-//       method: 'POST',
-//       data: $.params(comment),
-//       url: '/comment'
-//     })
-//     .then(function(data) {
-//       console.log('Success posting a comment', data);
-//     });
-//   };
-// })
-
-
 
 .factory('TopTrendsFactory', function($http, $sanitize) {
   var topTrends = [];
@@ -473,6 +442,20 @@ angular.module('smartNews.services', ['ngCookies'])
       });
   };
 
+  ///////////
+  // BROKEN
+  ///////////
+  // var getComments = function() {
+  //   var url = '/' + primaryArticle[0].id + '/comments';
+  //   return $http({
+  //     method: 'GET',
+  //     url: url
+  //   })
+  //   .then(function() {
+  //     console.log('get comments from topTrends');
+  //   });
+  // };
+///////////////////////////
   var setPrimaryArticle = function(article) {
     primaryArticle[0] = article;
   };
@@ -486,6 +469,7 @@ angular.module('smartNews.services', ['ngCookies'])
   topTrendsGoogleTrends();
 
   return {
+    // getComments: getComments,
     topTrends: topTrends,
     primaryArticle: primaryArticle,
     setPrimaryArticle: setPrimaryArticle,

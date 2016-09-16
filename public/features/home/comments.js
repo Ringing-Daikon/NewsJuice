@@ -1,32 +1,54 @@
 angular.module('smartNews.home')
 
-.controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
+.controller('CommentCtrl', function($timeout, $scope, $http, isAuth, Comment, TopTrendsFactory) {
 
 
-  $scope.commentData = {};
+   $scope.commentData = {};
 
 
   // USER INFO
   $scope.user = isAuth();
-  console.log($scope.user);
 
   // Primary Article Info
-  $scope.news = TopTrendsFactory.primaryArticle;
+  $scope.article = TopTrendsFactory.primaryArticle;
 
-  $scope.getComments = function() {
-    Comment.get($scope.news)
+
+  // $scope.getComments = function() {
+
+  //   Comment.get($scope.article)
+  //       .success(function(data) {
+  //         $scope.comments = data;
+  //       });
+  // };
+
+  // $timeout(function() {
+  //   $scope.getComments();
+  // }, 2000);
+
+  $scope.getSavedComments = function() {
+    // $scope.comments = null;
+    Comment.get($scope.article)
         .success(function(data) {
           $scope.comments = data;
         });
   };
-  $scope.getComments();
+
+  $timeout(function() {
+    $scope.getSavedComments();
+  }, 2000);
+
+  setInterval(function() {
+    $scope.getSavedComments();
+  }, 750);
+
 
   $scope.addComment = function() {
 
-    Comment.save($scope.commentData, $scope.user, $scope.news)
+    Comment.save($scope.commentData, $scope.user, $scope.article)
       .success(function(data) {
         $scope.comments.push(data);
-        console.log($scope.news[0]);
+        $scope.commentData.text = '';
+        // console.log($scope.article[0]);
       })
       .error(function(err) {
         console.log(err);
@@ -34,12 +56,16 @@ angular.module('smartNews.home')
 
   };
 
-  $scope.deleteComment = function(commentID) {
 
+  $scope.deleteComment = function(commentID) {
+    // console.log(commentID);
     Comment.delete(commentID)
-      .success(function(data) {
-        console.log('deleted', data);
+      // .success(function(data) {
+      //   // console.log('deleted', data);
+      // })
+      .error(function(err) {
+        console.log(err);
       });
-    $scope.getComments();
+    $scope.getSavedComments();
   };
 });
