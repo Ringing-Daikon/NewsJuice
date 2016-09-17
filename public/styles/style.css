@@ -510,6 +510,7 @@ div.tooltip-articles {
   height: 27px;
   width: 27px;
   float: left;
+  margin-right: 3px;
 }
 
 .twitter-share-button:hover {
@@ -520,6 +521,16 @@ div.tooltip-articles {
   margin: 2px 0;
 }
 
+.google-share-button {
+  color: #db4437;
+  height: 27px;
+  width: 27px;
+  float: left;
+}
+
+.google-share-button:hover {
+  color: #c53929;
+}
 .bottom-spacer {
   width: 500px;
   height: 50px;
