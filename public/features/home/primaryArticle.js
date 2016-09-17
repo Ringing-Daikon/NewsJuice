@@ -1,9 +1,10 @@
 angular.module('smartNews.home')
 
 .controller('PrimaryArticleCtrl', function($scope, TopTrendsFactory, saveArticle, isAuth, renderWatsonBubbleChart) {
-    $scope.isAuth = function() {
-      return !!($scope.user = isAuth());
-    };
+  var interval = 2000;
+  $scope.isAuth = function() {
+    return !!($scope.user = isAuth());
+  };
 
   $scope.getPrimaryArticle = function(title) {
     $scope.articleLoad = false;
@@ -27,7 +28,11 @@ angular.module('smartNews.home')
         renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event);
       };
       $scope.articleLoad = true;
-      $scope.getComments(data);
+      $scope.getComments(data).then(function() {
+        setInterval(function() {
+          $scope.getComments($scope.primaryArticle)
+        }, interval);
+      })
     });
 
   };

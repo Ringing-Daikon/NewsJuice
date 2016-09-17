@@ -1,8 +1,9 @@
 angular.module('smartNews.home')
 
 .controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
+  var interval;
   $scope.getComments = function(article) {
-    Comment.get(article)
+    return Comment.get(article)
     .success(function(data) {
       $scope.comments = data;
       var fbIdObj = data
@@ -54,5 +55,5 @@ angular.module('smartNews.home')
     });
   };
 
-  setInterval($scope.getComments, 2000);
+  // 
 });
