@@ -106,7 +106,7 @@ angular.module('smartNews.services', ['ngCookies'])
             }
 
             dimensions[articleData.id] = {
-              width: farRight - farLeft + 50,
+              width: farRight - farLeft + 100,
               height: farBottom - farTop + 17
             }
 
@@ -124,7 +124,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
             // set up the bubble chart
             var nodes = svg.append('g')
-              .attr('transform', `translate(${Math.abs(farLeft)}, ${Math.abs(farTop) + 12})`)
+              .attr('transform', `translate(${Math.abs(farLeft) + 50}, ${Math.abs(farTop) + 12})`)
               .selectAll('.bubble')
               .data(circles)
               .enter();

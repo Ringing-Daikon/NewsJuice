@@ -226,6 +226,7 @@ li.trend-listing {
 }
 
 .article-subheading {
+  margin-top: 20px;
   font-family: 'EB Garamond', serif;
   font-size: 16px;
   padding: 10px 10px 12px 0px;
@@ -480,19 +481,22 @@ div.tooltip-articles {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  font-family: helvetica, arial, sans-serif;
+  float: left;
   background: #4267b2;
   border-radius: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
   font-size: 13px;
-  height: 27px;
-  width: 27px;
+  height: 25.7px;
+  width: 25.7px;
   color: #fff;
   cursor: pointer;
 }
 
 .facebook-button:hover {
   background: #365899;
-  border: 1px solid #365899;
+  /*border: 1px solid #365899;*/
   color: white;
   text-decoration: none;
 }
@@ -501,6 +505,7 @@ div.tooltip-articles {
   color: #1da1f2;
   height: 27px;
   width: 27px;
+  float: left;
 }
 
 .twitter-share-button:hover {
