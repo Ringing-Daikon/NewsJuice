@@ -2,13 +2,15 @@
   <form name="commentForm" ng-submit="addComment()" ng-controller="CommentCtrl"> <!-- ng-submit will disable the default form action and use our function -->
 
         <!-- COMMENT TEXT -->
-        <div class="form-group comment-input">
-          <input type="text" class="form-control input-lg" name="text" ng-model="commentText" placeholder="What do you think?">
-        </div>
+        <div  ng-show="!!user._facebookUniqueID">
+          <div class="form-group comment-input">
+            <input type="text" class="form-control input-lg" name="text" ng-model="commentText" placeholder="What do you think?">
+          </div>
 
-        <!-- SUBMIT BUTTON -->
-        <div class="comment-submit text-right">
-          <button type="submit" class="btn btn-default">Submit</button>
+          <!-- SUBMIT BUTTON -->
+          <div class="comment-submit text-right">
+            <button type="submit" class="btn btn-default">Submit</button>
+          </div>
         </div>
 
         <!-- Display Comments in Reverse Order -->

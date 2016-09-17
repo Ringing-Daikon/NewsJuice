@@ -4,7 +4,7 @@
   "description": "news app",
   "main": "./server/index.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "nodemon server/index.js $PORT",
     "test": "grunt test"
   },
   "repository": {

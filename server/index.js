@@ -1,5 +1,4 @@
-const port = 3000;
-
+const port = process.argv[2] || 80;
 
 const chalk = require('chalk'),
 cy = chalk.yellow.bold,
