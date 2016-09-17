@@ -1,13 +1,3 @@
-// TO-DOs
-
-// 1: Make it so timeline width fills out the width of parent div.
-// see: http://jsfiddle.net/shawnbot/BJLe6/
-// use document.getElementById('graph') instead of $('#graph');
-
-// Timeline height can be a fixed px height.
-
-// 2: Set up graph to start from the middle of y-axes rather than bottom
-
 angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope, $http) {
@@ -166,10 +156,7 @@ angular.module('smartNews.services', ['ngCookies'])
               .classed('small-bubble', (d) => {
                 return d.r < 25;
               });
-              // .style('stroke', 'white')
-              // .style('stroke-width', '1.5px')
-              // .style('stroke-opacity', strokeOpacity);
-
+              
             // Add text to the bubbles.
             colorIndex = 0;
 
@@ -186,14 +173,6 @@ angular.module('smartNews.services', ['ngCookies'])
               .style('font-family', '"Karla", regular')
               .style('font-size', '14px')
               .style('letter-spacing', '0.01em')
-            /*
-            div.transition()        
-              .duration(200)      
-              .style("opacity", .9);      
-            div.html(d.name + "<br/>" + d.r.toFixed(2))  
-              .style("left", (d3.event.pageX) + "px")     
-              .style("top", (d3.event.pageY - 28) + "px");
-            */
 
             var smallBubbleLabel = d3.select('.bubble-label-svg');
             var toneId;
@@ -236,10 +215,7 @@ angular.module('smartNews.services', ['ngCookies'])
                   .transition()
                     .duration(100)
                     .style('fill-opacity', bubbleOpacity)
-                // var circle = angular.element(this);
-                // if (circle.hasClass('small-bubble')) {
-                //   nodes.filter((d))
-                // }
+
                 var lines = d3.selectAll('line')
                 lines.remove();
 
@@ -326,8 +302,6 @@ angular.module('smartNews.services', ['ngCookies'])
       // .classed('svg-container', true) //container class to make it responsive
       .append('svg')
       // responsive SVG needs these two attr's and an absence of height and width attr's
-      // .attr('preserveAspectRatio', 'xMinYMin meet') // preserves aspect ratio by 'fitting' the viewbox to the viewport, rather than filling
-      // .attr('viewBox', '0 0 ' + (window.innerWidth) + ' ' + (window.innerHeight))
       .attr('viewBox', '0 0 ' + (window.innerWidth) + ' ' + 400 )
       // append group element
       .append('g')

@@ -226,7 +226,7 @@ li.trend-listing {
 }
 
 .article-subheading {
-  margin-top: 20px;
+  margin-top: 23px;
   font-family: 'EB Garamond', serif;
   font-size: 16px;
   padding: 10px 10px 12px 0px;
@@ -486,7 +486,7 @@ div.tooltip-articles {
   border-radius: 4px;
   margin-top: 2px;
   margin-bottom: 2px;
-  margin-right: 2px;
+  margin-right: 4px;
   font-size: 13px;
   height: 25.7px;
   width: 25.7px;
@@ -510,4 +510,8 @@ div.tooltip-articles {
 
 .twitter-share-button:hover {
   color: #0c7abf
+}
+
+.social-buttons-container {
+  margin: 2px 0;
 }
