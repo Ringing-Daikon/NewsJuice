@@ -40,16 +40,14 @@ angular.module('smartNews.services', ['ngCookies'])
     }
   }
 
-  // set outside of renderWatsonBubbleChart function
+  // set dimensions outside of renderWatsonBubbleChart function
   // so that closure preserves its value with different
   // instances of the function.
-  var svgWidth,
-      svgHeight;
+  var dimensions = {}
 
   var renderWatsonBubbleChart = function(articleData, event) {
     
     var button = angular.element(event.target);
-
     // If a bubbleChart has already been rendered for that article,
     // don't render another one.
     if (button.hasClass('inactive')) {
@@ -82,7 +80,7 @@ angular.module('smartNews.services', ['ngCookies'])
         d3.select(svg)
           .transition()
             .duration(200)
-            .attr('height', svgHeight)
+            .attr('height', dimensions[articleData.id].height)
       } else {
 
         // Send article text to watson, get tone data back.
@@ -120,8 +118,10 @@ angular.module('smartNews.services', ['ngCookies'])
               var farBottom = bottom > farBottom ? bottom : farBottom;
             }
 
-            svgWidth = farRight - farLeft;
-            svgHeight = farBottom - farTop;
+            dimensions[articleData.id] = {
+              width: farRight - farLeft,
+              height: farBottom - farTop
+            }
 
 
 
@@ -134,8 +134,8 @@ angular.module('smartNews.services', ['ngCookies'])
               .style('margin-bottom', '10px');
             svg.transition()
               .duration(200)
-              .attr('width', svgWidth)
-              .attr('height', svgHeight);
+              .attr('width', dimensions[articleData.id].width)
+              .attr('height', dimensions[articleData.id].height);
 
             // set up the bubble chart
             var nodes = svg.append('g')
