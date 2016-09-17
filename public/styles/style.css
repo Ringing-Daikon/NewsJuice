@@ -453,3 +453,34 @@ div.tooltip-articles {
 .search-history-remove {
   width: 10%;
 }
+
+.facebook-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-family: helvetica, arial, sans-serif;
+  background: #4267b2;
+  border-radius: 4px;
+  font-size: 13px;
+  height: 27px;
+  width: 27px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.facebook-button:hover {
+  background: #365899;
+  border: 1px solid #365899;
+  color: white;
+  text-decoration: none;
+}
+
+.twitter-share-button {
+  color: #1da1f2;
+  height: 27px;
+  width: 27px;
+}
+
+.twitter-share-button:hover {
+  color: #0c7abf
+}
