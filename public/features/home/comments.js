@@ -13,17 +13,17 @@ angular.module('smartNews.home')
   $scope.article = TopTrendsFactory.primaryArticle;
 
 
-  // $scope.getComments = function() {
+  $scope.getComments = function() {
 
-  //   Comment.get($scope.article)
-  //       .success(function(data) {
-  //         $scope.comments = data;
-  //       });
-  // };
+    Comment.get($scope.article)
+        .success(function(data) {
+          $scope.comments = data;
+        });
+  };
 
-  // $timeout(function() {
-  //   $scope.getComments();
-  // }, 2000);
+  $timeout(function() {
+    $scope.getComments();
+  }, 2000);
 
   $scope.getSavedComments = function() {
     // $scope.comments = null;
@@ -32,15 +32,6 @@ angular.module('smartNews.home')
           $scope.comments = data;
         });
   };
-
-  $timeout(function() {
-    $scope.getSavedComments();
-  }, 2000);
-
-  setInterval(function() {
-    $scope.getSavedComments();
-  }, 750);
-
 
   $scope.addComment = function() {
 

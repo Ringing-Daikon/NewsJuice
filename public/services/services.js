@@ -356,27 +356,24 @@ angular.module('smartNews.services', ['ngCookies'])
 })
 
 .factory('Comment', function($http) {
-
+  var url = '/comments/';
   return {
     get: function(article) {
       // console.log(articleID);
       // console.log(article[0].id);
-      var url = '/comments/' + article[0].id;
       // console.log(articleID);
       return $http({
         method: 'GET',
-        url: url,
+        url: url + article[0].id,
       });
 
     },
 
     save: function(commentData, user, article) {
-      var url = '/comments/' + article[0].id;
       return $http({
         method: 'POST',
-        url: url,
+        url: url + article[0].id,
         data: {
-          id: article[0].id,
           _facebookUniqueID: user._facebookUniqueID,
           text: commentData.text
         }
@@ -387,7 +384,7 @@ angular.module('smartNews.services', ['ngCookies'])
     delete: function(commentID) {
       return $http({
         method: 'DELETE',
-        url: '/comments/' + commentID
+        url: url + commentID
       });
     }
 
