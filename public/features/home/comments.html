@@ -20,7 +20,7 @@
             <h2 class="comment">
               {{users[comment._facebookUniqueID].firstname}}&nbsp{{users[comment._facebookUniqueID].lastname}}
             </h2>
-            <img ng-src="{{users[comment._facebookUniqueID].picture}}">
+            <img ng-src="{{users[comment._facebookUniqueID].picture || users[0][comment._facebookUniqueID].picture}}">
           <span>{{comment.text}}</span>
             <div id="comments-title">
             </div>

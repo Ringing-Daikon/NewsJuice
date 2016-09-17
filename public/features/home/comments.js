@@ -1,13 +1,13 @@
 angular.module('smartNews.home')
 
 .controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
-  $scope.getComments = function() {
-    Comment.get($scope.primaryArticle)
+  $scope.getComments = function(article) {
+    Comment.get(article)
     .success(function(data) {
       $scope.comments = data;
       var fbIdObj = data
         .map(function(comment) {
-          return comment._facebookUniqueID
+          return comment._facebookUniqueID;
         }).reduce(function(obj, next){
           obj[next] = 1;
           return obj;
@@ -17,7 +17,6 @@ angular.module('smartNews.home')
         fbIdArr.push(key);
       }
       Comment.getUsers(fbIdArr).then(function(users) {
-        console.log(users);
         $scope.users = users; 
       })
     })
@@ -28,8 +27,8 @@ angular.module('smartNews.home')
   $scope.addComment = function() {
     Comment.save($scope.commentText, $scope.user, $scope.primaryArticle)
     .success(function(data) {
-      $scope.getComments();
-      // $scope.comments.push(data); //failing to update name/picture, so switched to a full rerender with getComments
+      $scope.users[$scope.user._facebookUniqueID] = $scope.users[$scope.user._facebookUniqueID] || $scope.user;
+      $scope.comments.push(data); 
       $scope.commentText = '';
     })
     .error(function(err) {
@@ -55,5 +54,5 @@ angular.module('smartNews.home')
     });
   };
 
-  setInterval($scope.getComments, 5000);
+  setInterval($scope.getComments, 2000);
 });
