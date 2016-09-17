@@ -182,7 +182,9 @@ angular.module('smartNews.services', ['ngCookies'])
             // Add text to the bubbles.
             colorIndex = 0;
             nodes.append('text')
-              .attr('x', (d) => d.x)
+              .attr('x', (d) => {
+                return d.x;
+              })
               .attr('y', (d) => d.y)
               .attr('text-anchor', 'middle')
               .text((d) => d.tone_name)
