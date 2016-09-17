@@ -106,8 +106,8 @@ angular.module('smartNews.services', ['ngCookies'])
             }
 
             dimensions[articleData.id] = {
-              width: farRight - farLeft,
-              height: farBottom - farTop
+              width: farRight - farLeft + 50,
+              height: farBottom - farTop + 17
             }
 
             // create svg container with slide-down effect
@@ -124,7 +124,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
             // set up the bubble chart
             var nodes = svg.append('g')
-              .attr('transform', `translate(${Math.abs(farLeft)}, ${Math.abs(farTop) + 5})`)
+              .attr('transform', `translate(${Math.abs(farLeft)}, ${Math.abs(farTop) + 12})`)
               .selectAll('.bubble')
               .data(circles)
               .enter();
@@ -163,7 +163,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
             d3.selectAll('circle')
               .classed('small-bubble', (d) => {
-                return d.r < 22;
+                return d.r < 25;
               });
               // .style('stroke', 'white')
               // .style('stroke-width', '1.5px')
@@ -172,7 +172,7 @@ angular.module('smartNews.services', ['ngCookies'])
             // Add text to the bubbles.
             colorIndex = 0;
 
-            nodes.filter((d) => d.r >= 21)
+            nodes.filter((d) => d.r >= 25)
               .append('text')
               .attr('x', (d) => {
                 return d.x;
@@ -205,7 +205,10 @@ angular.module('smartNews.services', ['ngCookies'])
                 toneId = d.tone_id;
                 var circle = angular.element(this);
                 if (circle.hasClass('small-bubble')) {
-                  nodes.filter((d) => d.r < 21 && d.tone_id === toneId)
+                  
+                  
+
+                  nodes.filter((d) => d.r < 25 && d.tone_id === toneId)
                     .append('text')
                     .attr('x', (d) => d.x + d.r)
                     .attr('y', (d) => d.y - d.r)
@@ -217,7 +220,7 @@ angular.module('smartNews.services', ['ngCookies'])
                     .style('letter-spacing', '0.01em')
                     .style('text-shadow', '0 0 5px black, 0 0 5px black, 0 0 5px black')
 
-                  nodes.filter((d) => d.r < 21 && d.tone_id === toneId)
+                  nodes.filter((d) => d.r < 25 && d.tone_id === toneId)
                     .append('line')
                     .attr('x1', d.x)
                     .attr('y1', d.y - 3)
@@ -240,7 +243,7 @@ angular.module('smartNews.services', ['ngCookies'])
                 lines.remove();
 
                 var text = d3.selectAll('text')
-                  .filter((d) => d.tone_id === toneId && d.r < 21)
+                  .filter((d) => d.tone_id === toneId && d.r < 25)
                   .transition()
                     .duration(200)
                     .style('opacity', 0)
