@@ -101,8 +101,11 @@ h2.top {
   font-size: 36px;
 }
 
-h2.comment {
+h2.comment  > a {
   font-size: 16px;
+  font-family: 'EB Garamond', serif;
+  color: #3b5998;
+  font-weight: bold;
 }
 
 h2.bot {
@@ -204,10 +207,6 @@ li.trend-listing {
 .analyze-button {
   float: right;
   margin-right: 3px;
-}
-
-.article-title {
-  padding-right: 10px;
 }
 
 .article-name {
@@ -407,6 +406,29 @@ div.tooltip-articles {
   width: 100%;
   padding-top: 15px;
   margin-top: 10px;
+}
+
+.comment-text {
+
+}
+
+.comment-submit {
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+
+.comment-options {
+  text-align: right;
+}
+
+.comment-input {
+  padding-top: 40px;
+}
+
+.comments-picture > img {
+  width: 45px;
+  margin: 20px 20px 20px 0;
+  border-radius: 8px;
 }
 
 #comments-header {

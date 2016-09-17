@@ -1,3 +1,6 @@
+const port = 3000;
+
+
 const chalk = require('chalk'),
 cy = chalk.yellow.bold,
 cr = chalk.red.bold,
@@ -44,6 +47,5 @@ console.log(cr('                 ."-,.__' +
 '\n                 / ,"\'"\\,\'               `/  `-.|"'));
 
 
-const port = 3000;
 require('./server.js').listen(port, () =>
   console.log(chalk.green.bold(`\nSmartNews server listening on ${port}.`)));
