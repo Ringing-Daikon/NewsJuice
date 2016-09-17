@@ -27,19 +27,6 @@ angular.module('smartNews.services', ['ngCookies'])
       });
   };
 
-  var testForExistingSvg = function() {
-    var svgExists = false;
-    var svg;
-    var node = event.path[3].childNodes;
-
-    for (var i = 0; i < node.length; i++) {
-      if (node[i].tagName === 'svg') {
-        svg = node[i];
-        svgExists = true;
-      }
-    }
-  }
-
   // set dimensions outside of renderWatsonBubbleChart function
   // so that closure preserves its value with different
   // instances of the function.
@@ -90,7 +77,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
             var rTotal = 0;
             for (var i = 0; i < data.length; i++) {
-              data[i].r = data[i].score * 100;
+              data[i].r = (data[i].score * 100) + 10;
               rTotal += data[i].r;
             }
 
@@ -122,8 +109,6 @@ angular.module('smartNews.services', ['ngCookies'])
               width: farRight - farLeft,
               height: farBottom - farTop
             }
-
-
 
             // create svg container with slide-down effect
             var svg = d3.select(event.path[3])
@@ -166,7 +151,7 @@ angular.module('smartNews.services', ['ngCookies'])
               sadness: '#086DB2'
             }
             var colorScheme = 0;
-            var bubbleOpacity = .7;
+            var bubbleOpacity = .8;
             var strokeOpacity = 1;
 
 
@@ -174,24 +159,93 @@ angular.module('smartNews.services', ['ngCookies'])
             bubble.attr('cx', (d) => d.x)
               .attr('cy', (d) => d.y - 5)
               .style('fill', (d) => colors[d.tone_id])
-              .style('fill-opacity', bubbleOpacity)
-              .style('stroke', 'white')
-              .style('stroke-width', '1.5px')
-              .style('stroke-opacity', strokeOpacity);
+              .style('fill-opacity', bubbleOpacity);
+
+            d3.selectAll('circle')
+              .classed('small-bubble', (d) => {
+                return d.r < 22;
+              });
+              // .style('stroke', 'white')
+              // .style('stroke-width', '1.5px')
+              // .style('stroke-opacity', strokeOpacity);
 
             // Add text to the bubbles.
             colorIndex = 0;
 
-            nodes.append('text')
+            nodes.filter((d) => d.r >= 21)
+              .append('text')
               .attr('x', (d) => {
                 return d.x;
               })
               .attr('y', (d) => d.y)
               .attr('text-anchor', 'middle')
+              .attr('class', 'bubble-label')
               .text((d) => d.tone_name)
               .style('fill', 'white')
               .style('font-family', '"Karla", regular')
-              .style('font-size', '12px');
+              .style('font-size', '14px')
+              .style('letter-spacing', '0.01em')
+            /*
+            div.transition()        
+              .duration(200)      
+              .style("opacity", .9);      
+            div.html(d.name + "<br/>" + d.r.toFixed(2))  
+              .style("left", (d3.event.pageX) + "px")     
+              .style("top", (d3.event.pageY - 28) + "px");
+            */
+
+            var smallBubbleLabel = d3.select('.bubble-label-svg');
+            var toneId;
+            d3.selectAll('circle')
+              .on('mouseover', function(d) {
+                d3.select(this)
+                  .transition()
+                    .duration(100)
+                    .style('fill-opacity', '1');
+                toneId = d.tone_id;
+                var circle = angular.element(this);
+                if (circle.hasClass('small-bubble')) {
+                  nodes.filter((d) => d.r < 21 && d.tone_id === toneId)
+                    .append('text')
+                    .attr('x', (d) => d.x + d.r)
+                    .attr('y', (d) => d.y - d.r)
+                    .attr('class', 'bubble-label')
+                    .text((d) => d.tone_name)
+                    .style('fill', 'white')
+                    .style('font-family', '"Karla", regular')
+                    .style('font-size', '14px')
+                    .style('letter-spacing', '0.01em')
+                    .style('text-shadow', '0 0 5px black, 0 0 5px black, 0 0 5px black')
+
+                  nodes.filter((d) => d.r < 21 && d.tone_id === toneId)
+                    .append('line')
+                    .attr('x1', d.x)
+                    .attr('y1', d.y - 3)
+                    .attr('x2', d.x + d.r - 1)
+                    .attr('y2', d.y - d.r + 1)
+                    .attr('stroke', 'black')
+                    .attr('stroke-width', '1')
+                }
+              })
+              .on('mouseout', function(d) {
+                d3.select(this)
+                  .transition()
+                    .duration(100)
+                    .style('fill-opacity', bubbleOpacity)
+                // var circle = angular.element(this);
+                // if (circle.hasClass('small-bubble')) {
+                //   nodes.filter((d))
+                // }
+                var lines = d3.selectAll('line')
+                lines.remove();
+
+                var text = d3.selectAll('text')
+                  .filter((d) => d.tone_id === toneId && d.r < 21)
+                  .transition()
+                    .duration(200)
+                    .style('opacity', 0)
+                text.remove();
+              });
           })    
       } 
     }
