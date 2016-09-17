@@ -1,71 +1,58 @@
 angular.module('smartNews.home')
 
-.controller('CommentCtrl', function($timeout, $scope, $http, isAuth, Comment, TopTrendsFactory) {
-
-
-   $scope.commentData = {};
-
-
-  // USER INFO
-  $scope.user = isAuth();
-
-  // Primary Article Info
-  $scope.article = TopTrendsFactory.primaryArticle;
-
-
-  // $scope.getComments = function() {
-
-  //   Comment.get($scope.article)
-  //       .success(function(data) {
-  //         $scope.comments = data;
-  //       });
-  // };
-
-  // $timeout(function() {
-  //   $scope.getComments();
-  // }, 2000);
-
-  $scope.getSavedComments = function() {
-    // $scope.comments = null;
-    Comment.get($scope.article)
-        .success(function(data) {
-          $scope.comments = data;
-        });
-  };
-
-  $timeout(function() {
-    $scope.getSavedComments();
-  }, 2000);
-
-  setInterval(function() {
-    $scope.getSavedComments();
-  }, 750);
-
-
-  $scope.addComment = function() {
-
-    Comment.save($scope.commentData, $scope.user, $scope.article)
-      .success(function(data) {
-        $scope.comments.push(data);
-        $scope.commentData.text = '';
-        // console.log($scope.article[0]);
+.controller('CommentCtrl', function($scope, $http, isAuth, Comment, TopTrendsFactory) {
+  $scope.getComments = function(article) {
+    Comment.get(article)
+    .success(function(data) {
+      $scope.comments = data;
+      var fbIdObj = data
+        .map(function(comment) {
+          return comment._facebookUniqueID;
+        }).reduce(function(obj, next){
+          obj[next] = 1;
+          return obj;
+        }, {});
+      var fbIdArr = [];
+      for(var key in fbIdObj) {
+        fbIdArr.push(key);
+      }
+      Comment.getUsers(fbIdArr).then(function(users) {
+        $scope.users = users; 
       })
-      .error(function(err) {
-        console.log(err);
-      });
-
+    })
+    .error(function(err) {
+      console.error(err);
+    });
   };
-
-
-  $scope.deleteComment = function(commentID) {
-    // console.log(commentID);
+  $scope.addComment = function() {
+    Comment.save($scope.commentText, $scope.user, $scope.primaryArticle)
+    .success(function(data) {
+      $scope.users[$scope.user._facebookUniqueID] = $scope.users[$scope.user._facebookUniqueID] || $scope.user;
+      $scope.comments.push(data); 
+      $scope.commentText = '';
+    })
+    .error(function(err) {
+      console.error(err);
+    });
+  };
+  // $scope.editComment = function(commentID, index) {
+  //   Comment.edit(commentID)
+  //   .success(function(data) {
+  //     $scope.comments[$scope.comments.length - 1 - index] = data;
+  //   })
+  //   .error(function(err) {
+  //     console.error(err);
+  //   });
+  // };
+  $scope.deleteComment = function(commentID, index) {
     Comment.delete(commentID)
-      // .success(function(data) {
-      //   // console.log('deleted', data);
-      // })
-      .error(function(err) {
-        console.log(err);
-      });
-    $scope.getSavedComments();
+    .success(function(data) {
+      $scope.comments.splice($scope.comments.length - 1 - index, 1);
+    })
+    .error(function(err) {
+      console.error(err);
+    });
   };
+
+  setInterval($scope.getComments, 2000);
 });

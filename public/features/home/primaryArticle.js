@@ -1,32 +1,35 @@
 angular.module('smartNews.home')
 
 .controller('PrimaryArticleCtrl', function($scope, TopTrendsFactory, saveArticle, isAuth, renderWatsonBubbleChart) {
-
-  $scope.news = TopTrendsFactory.primaryArticle;
-
-  $scope.isAuth = function() {
-    $scope.user = isAuth();
-    return !!isAuth();
-  };
-
-  $scope.clickSave = function() {
-    var now = new Date();
-    var article = {
-      title: $scope.news[0].title,
-      author: $scope.news[0].author.name,
-      publishDate: $scope.news[0].publishedAt,
-      savedDate: now,
-      articleLink: $scope.news[0].links.permalink,
-      articleSource: $scope.news[0].source.name,
-      img: $scope.news[0].media[0].url,
-      body: $scope.news[0].body
+    $scope.isAuth = function() {
+      return !!($scope.user = isAuth());
     };
-    saveArticle(article);
-  };
 
-  $scope.renderBubbleChart = function(articleData, $event) {
-    articleData = articleData ? articleData : $scope.news[0];
-    renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event);
-  }
+  $scope.getPrimaryArticle = function(title) {
+    $scope.articleLoad = false;
+    TopTrendsFactory.getPrimaryArticle(title)
+    .then(function(data) {
+      $scope.primaryArticle = data;
+      $scope.clickSave = function() {
+        saveArticle({
+          title: data.title,
+          author: data.name,
+          publishDate: data.publishedAt,
+          savedDate: new Date(),
+          articleLink: data.links.permalink,
+          articleSource: data.source.name,
+          img: data.media[0].url,
+          body: data.body
+        });
+      };
+      $scope.renderBubbleChart = function(articleData, $event) {
+        articleData = articleData ? articleData : $scope.primaryArticle;
+        renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event);
+      };
+      $scope.articleLoad = true;
+      $scope.getComments(data);
+    });
+
+  };
 
 });

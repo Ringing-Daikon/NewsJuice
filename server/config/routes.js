@@ -53,6 +53,7 @@ router.route('/comments/:id')
   .post(comment.postComment)
   .put(comment.editComment)
   .delete(comment.deleteComment);
+router.get('/user/:id', user.getUser)
 /*** Watson Tone Analysis ***/
 router.post('/toneAnalysis', watson.analyze);
 module.exports = router;
