@@ -32,7 +32,7 @@ angular.module('smartNews.home')
           $scope.comments = data;
         });
   };
-
+  
   $scope.addComment = function() {
 
     Comment.save($scope.commentData, $scope.user, $scope.article)
