@@ -16,7 +16,6 @@ angular.module('smartNews.home')
     TopTrendsFactory.getPrimaryArticle(title)
     .then(function (article) {
       TopTrendsFactory.primaryArticle[0] = article.data.stories[0];
-
       getSavedComments(article.data.stories);
     });
 

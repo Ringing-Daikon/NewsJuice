@@ -3,30 +3,19 @@ angular.module('smartNews.home')
 .controller('CommentCtrl', function($timeout, $scope, $http, isAuth, Comment, TopTrendsFactory) {
 
 
-   $scope.commentData = {};
+  $scope.commentData = {};
 
 
   // USER INFO
   $scope.user = isAuth();
+  console.log($scope.user);
 
   // Primary Article Info
   $scope.article = TopTrendsFactory.primaryArticle;
 
 
-  // $scope.getComments = function() {
-
-  //   Comment.get($scope.article)
-  //       .success(function(data) {
-  //         $scope.comments = data;
-  //       });
-  // };
-
-  // $timeout(function() {
-  //   $scope.getComments();
-  // }, 2000);
-
   $scope.getSavedComments = function() {
-    // $scope.comments = null;
+
     Comment.get($scope.article)
         .success(function(data) {
           $scope.comments = data;
