@@ -7,7 +7,7 @@
       Save Article
     </button>
   </span>
-  <span class="analyze-button" ng-show="isAuth()">
+  <span class="analyze-button">
     <button ng-click="renderBubbleChart(article, $event)" class="btn btn-default">
       Analyze Tone
     </button>
@@ -22,6 +22,9 @@
       <a href="https://twitter.com/intent/tweet?text={{primaryArticle.links.permalink}}" data-size="large">
         <i class="fa fa-twitter-square twitter-share-button" aria-hidden="true"></i>
       </a>
+    </span>
+    <span>
+      <a href="https://plus.google.com/share?url={{primaryArticle.links.permalink}}" target="_window"><i class="fa fa-google-plus-square google-share-button" aria-hidden="true"></i></a>
     </span>
   </div>
 </h2>
