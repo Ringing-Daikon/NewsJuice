@@ -103,6 +103,7 @@ h2.top {
 
 h2.comment  > a {
   font-size: 16px;
+  margin-bottom: 0;
   font-family: 'EB Garamond', serif;
   color: #3b5998;
   font-weight: bold;
@@ -151,6 +152,7 @@ h3 {
 
 #home-left-div {
   padding-left: 0px;
+  height: 1800px;
 }
 
 #home-right-div {
@@ -422,14 +424,15 @@ div.tooltip-articles {
   text-align: right;
 }
 
-.comment-input {
-  padding-top: 40px;
+.comments-picture > img {
+  max-width: 45px;
+  margin: 0 10px 0px 0;
+  border-radius: 8px;
 }
 
-.comments-picture > img {
-  width: 45px;
-  margin: 20px 20px 20px 0;
-  border-radius: 8px;
+.comments-user-name {
+  vertical-align: text-top;
+  line-height: 170%;
 }
 
 #comments-header {
@@ -515,3 +518,9 @@ div.tooltip-articles {
 .social-buttons-container {
   margin: 2px 0;
 }
+
+.bottom-spacer {
+  width: 500px;
+  height: 50px;
+}
+
