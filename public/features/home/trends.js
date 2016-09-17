@@ -1,9 +1,14 @@
 angular.module('smartNews.home')
 
-.controller('TopTrendsCtrl', function($scope, $http, TopTrendsFactory, Comment) {
+.controller('TopTrendsCtrl', function($scope, $http, TopTrendsFactory, Comment, renderWatsonBubbleChart) {
+  var removeBubbleChart = function(event) {
+    renderWatsonBubbleChart.removeBubbleChart(event);
+  }
+
   TopTrendsFactory.getTrends().then(function(topics) {
     $scope.trends = topics;
-    ($scope.selectArticle = function (topic) { 
+    ($scope.selectArticle = function (topic, $event) {
+      removeBubbleChart($event)      
       $scope.getPrimaryArticle(topic.articleTitle);
     })(topics[0]);
   });

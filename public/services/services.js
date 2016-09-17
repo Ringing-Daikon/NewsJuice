@@ -54,6 +54,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
       var svgExists = false;
       var svg;
+
       var node = event.path[3].childNodes;
 
       //check if a bubble chart already exists for that article.
@@ -77,7 +78,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
             var rTotal = 0;
             for (var i = 0; i < data.length; i++) {
-              data[i].r = (data[i].score * 100) + 10;
+              data[i].r = (data[i].score * 75) + 10;
               rTotal += data[i].r;
             }
 
@@ -255,11 +256,11 @@ angular.module('smartNews.services', ['ngCookies'])
   }
 
   var removeBubbleChart = function(event) {
-    var svg = d3.select('svg')
+    var svg = d3.selectAll('svg')
       .transition()
         .duration(200)
         .attr('height', 0);
-    
+
     d3.select('.inactive')
       .classed('inactive', false);
 
