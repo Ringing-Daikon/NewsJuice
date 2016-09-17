@@ -2,7 +2,7 @@
 
   <ul id="trend-list">
     <li class="trend-listing" ng-repeat="trend in trends track by $index">
-      <table ng-click="selectArticle(trend);" class="link">
+      <table ng-click="selectArticle(trend, $event);" class="link">
         <tr>
           <td>
             <div class="trend-rank">{{$index + 1}}</div>
@@ -12,6 +12,7 @@
           </td>
           <td>
             <div  class="trend-topic">{{trend.topic}}</div>
+            <!-- <div ng-click="selectArticle(trend, $event);"  class="link trend-topic">{{trend.topic}}</div> -->
             <div class="trend-traffic">{{ trend.traffic }} hits</div>
           </td>
         </tr>

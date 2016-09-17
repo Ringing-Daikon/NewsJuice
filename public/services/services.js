@@ -44,7 +44,6 @@ angular.module('smartNews.services', ['ngCookies'])
       svgHeight;
 
   var renderWatsonBubbleChart = function(articleData, event) {
-
     var button = angular.element(event.target);
     
 
@@ -101,7 +100,6 @@ angular.module('smartNews.services', ['ngCookies'])
             var circles = d3.packSiblings(data);
 
             // determine the dimensions of the bubble chart
-            console.log(circles);
             var farLeft = circles[0].x - circles[0].r;
             var farTop = circles[0].y - circles[0].r;
             var farRight = circles[0].x + circles[0].r;
@@ -193,8 +191,21 @@ angular.module('smartNews.services', ['ngCookies'])
     }
   }
 
+  var removeBubbleChart = function(event) {
+    var svg = d3.select('svg')
+      .transition()
+        .duration(200)
+        .attr('height', 0);
+    
+    d3.select('.inactive')
+      .classed('inactive', false);
+
+    svg.remove();
+  }
+
   return {
-    renderWatsonBubbleChart: renderWatsonBubbleChart
+    renderWatsonBubbleChart: renderWatsonBubbleChart,
+    removeBubbleChart: removeBubbleChart
   }
 })
 
