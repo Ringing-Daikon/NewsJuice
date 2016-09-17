@@ -1,6 +1,6 @@
 <h2 class="article-title">
-  <a class="article-name" ng-href="{{ news[0].links.permalink }}">
-    {{ news[0].title }}
+  <a class="article-name" ng-href="{{ primaryArticle.links.permalink }}">
+    {{ primaryArticle.title }}
   </a>
   <span class="save-button" ng-show="isAuth()">
     <button ng-click="clickSave()" class="btn btn-default">
@@ -26,19 +26,19 @@
 
 <div class="article-subheading">
   <span>
-    {{ news[0].source.name }}
+    {{ news.source.name }}
   </span>
   <span class="article-date">
-    {{ news[0].publishedAt | date:'medium' }}
+    {{ news.publishedAt | date:'medium' }}
   </span>
 </div>
 
 <div class="article-body">
-  <img class="article-image col-xs-7" ng-src="{{ news[0].media[0].url }}">
+  <img class="article-image col-xs-7" ng-src="{{ primaryArticle.media[0].url }}">
   <p>
-    {{ news[0].body }}
+    {{ primaryArticle.body }}
   </p>
   <div class="article-author">
-    {{ news[0].author.name }}
+    {{ primaryArticle.author.name }}
   </div>
 </div>
