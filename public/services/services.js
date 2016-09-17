@@ -40,12 +40,15 @@ angular.module('smartNews.services', ['ngCookies'])
     }
   }
 
+  // set outside of renderWatsonBubbleChart function
+  // so that closure preserves its value with different
+  // instances of the function.
   var svgWidth,
       svgHeight;
 
   var renderWatsonBubbleChart = function(articleData, event) {
-    var button = angular.element(event.target);
     
+    var button = angular.element(event.target);
 
     // If a bubbleChart has already been rendered for that article,
     // don't render another one.
@@ -203,9 +206,24 @@ angular.module('smartNews.services', ['ngCookies'])
     svg.remove();
   }
 
+  var hideBubbleChart = function(event) {
+    var button = angular.element(event.target);
+    if (button.hasClass('inactive')) {
+      button.removeClass('inactive');
+      var svg = event.path[3].children[2];
+      d3.select(svg)
+        .transition()
+          .duration(200)
+          .attr('height', 0);
+      return false;
+    }
+    return true;
+  }
+
   return {
     renderWatsonBubbleChart: renderWatsonBubbleChart,
-    removeBubbleChart: removeBubbleChart
+    removeBubbleChart: removeBubbleChart,
+    hideBubbleChart: hideBubbleChart
   }
 })
 
