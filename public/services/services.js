@@ -162,7 +162,7 @@ angular.module('smartNews.services', ['ngCookies'])
               anger: '#E80521',
               disgust: '#592684',
               fear: '#325E2B',
-              joy: '#FFD629',
+              joy: '#FF8C23',
               sadness: '#086DB2'
             }
             var colorScheme = 0;
@@ -181,6 +181,7 @@ angular.module('smartNews.services', ['ngCookies'])
 
             // Add text to the bubbles.
             colorIndex = 0;
+
             nodes.append('text')
               .attr('x', (d) => {
                 return d.x;
