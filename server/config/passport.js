@@ -7,7 +7,8 @@ const user = require('../db/user.controller.js');
 passport.use(new FacebookStrategy({
   clientID: keys.facebook.FACEBOOK_APP_ID,
   clientSecret: keys.facebook.FACEBOOK_APP_SECRET,
-  callbackURL: 'http://localhost:3000/auth/facebook/callback',
+  callbackURL: 'http://newsjuice.info/auth/facebook/callback',
+  //for dev, use 'http://localhost:3000/auth/facebook/callback'
   profileFields: [
     'id', 
     'name', 
