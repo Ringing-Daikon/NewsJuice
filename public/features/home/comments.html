@@ -1,12 +1,9 @@
-<!-- <h3>Comments</h3> -->
 <div >
   <form name="commentForm" ng-submit="addComment()" ng-controller="CommentCtrl"> <!-- ng-submit will disable the default form action and use our function -->
 
-        <!-- Hide Comment Text Box  And Get Saved Comments-->
-
         <!-- COMMENT TEXT -->
         <div class="form-group comment-input">
-          <input type="text" class="form-control input-lg" name="text" ng-model="commentText" placeholder="Enter Your Comments">
+          <input type="text" class="form-control input-lg" name="text" ng-model="commentText" placeholder="What do you think?">
         </div>
 
         <!-- SUBMIT BUTTON -->
@@ -17,18 +14,20 @@
         <!-- Display Comments in Reverse Order -->
         <div ng-repeat="comment in comments.slice().reverse() track by $index">
           <div id="comments-header">
-            <h2 class="comment">
-              <a href="https://www.facebook.com/{{user._facebookUniqueID}}">
-                {{users[comment._facebookUniqueID].firstname}}&nbsp{{users[comment._facebookUniqueID].lastname}}
-              </a>
-            </h2>
-            <a class="comments-picture" href="https://www.facebook.com/{{user._facebookUniqueID}}"><img ng-src="{{users[comment._facebookUniqueID].picture || users[0][comment._facebookUniqueID].picture}}"></a>
+            <span>
+              <h2 class="comment">
+                <a class="comments-picture" href="https://www.facebook.com/{{user._facebookUniqueID}}">
+                  <img ng-src="{{users[comment._facebookUniqueID].picture || users[0][comment._facebookUniqueID].picture}}">
+                </a>
+                <a class="comments-user-name" href="https://www.facebook.com/{{user._facebookUniqueID}}">
+                  {{users[comment._facebookUniqueID].firstname}}&nbsp{{users[comment._facebookUniqueID].lastname}}
+                </a>
+              </h2>
+            </span>
           <span class="comment-text">{{comment.text}}</span>
             <div id="comments-title">
             </div>
           <div class="comment-options">
-<!--             <span class="btn"><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="editComment(comment._id, $index, ); $event.preventDefault()" class="text-muted">Edit</a></span>
- -->           
            <span><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="deleteComment(comment._id, $index); $event.preventDefault()" class="text-muted">Delete</a></span>
           </div>
         </div>

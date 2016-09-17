@@ -2,13 +2,13 @@
 
   <ul id="trend-list">
     <li class="trend-listing" ng-repeat="trend in trends track by $index">
-      <table class="link">
+      <table>
         <tr>
           <td>
             <div class="trend-rank">{{$index + 1}}</div>
           </td>
           <td>
-            <img class="trend-image" ng-src="{{ trend.img }}" alt="trend image">
+            <img class="trend-image link" ng-src="{{ trend.img }}" alt="trend image">
           </td>
           <td>
             <div ng-click="selectArticle(trend, $event);"  class="link trend-topic">{{trend.topic}}</div>

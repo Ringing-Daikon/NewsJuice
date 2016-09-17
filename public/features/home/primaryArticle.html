@@ -36,7 +36,9 @@
 </div>
 
 <div class="article-body">
-  <img class="article-image col-xs-7" ng-src="{{ primaryArticle.media[0].url }}">
+  <a ng-href="{{ primaryArticle.links.permalink }}">
+    <img class="article-image col-xs-7" ng-src="{{ primaryArticle.media[0].url }}">
+  </a>
   <p>
     {{ primaryArticle.body }}
   </p>
@@ -44,3 +46,4 @@
     {{ primaryArticle.author.name }}
   </div>
 </div>
+<div class="bottom-spacer"></div>
