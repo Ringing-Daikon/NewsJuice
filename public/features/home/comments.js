@@ -17,6 +17,7 @@ angular.module('smartNews.home')
         fbIdArr.push(key);
       }
       Comment.getUsers(fbIdArr).then(function(users) {
+        console.log(users);
         $scope.users = users; 
       })
     })
@@ -27,14 +28,23 @@ angular.module('smartNews.home')
   $scope.addComment = function() {
     Comment.save($scope.commentText, $scope.user, $scope.primaryArticle)
     .success(function(data) {
-      $scope.comments.push(data);
+      $scope.getComments();
+      // $scope.comments.push(data); //failing to update name/picture, so switched to a full rerender with getComments
       $scope.commentText = '';
     })
     .error(function(err) {
       console.error(err);
     });
-
   };
+  // $scope.editComment = function(commentID, index) {
+  //   Comment.edit(commentID)
+  //   .success(function(data) {
+  //     $scope.comments[$scope.comments.length - 1 - index] = data;
+  //   })
+  //   .error(function(err) {
+  //     console.error(err);
+  //   });
+  // };
   $scope.deleteComment = function(commentID, index) {
     Comment.delete(commentID)
     .success(function(data) {
@@ -44,4 +54,6 @@ angular.module('smartNews.home')
       console.error(err);
     });
   };
+
+  setInterval($scope.getComments, 5000);
 });

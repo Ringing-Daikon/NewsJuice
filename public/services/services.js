@@ -363,7 +363,6 @@ angular.module('smartNews.services', ['ngCookies'])
         method: 'GET',
         url: url + article.id,
       });
-
     },
     save: function(commentText, user, article) {
       return $http({
@@ -374,7 +373,15 @@ angular.module('smartNews.services', ['ngCookies'])
           text: commentText
         }
       });
-
+    },
+    edit: function(commentID, commentText) {
+      return $http({
+        method: 'PUT',
+        url: url + commentID,
+        data: {
+          text: commentText
+        }
+      });
     },
     delete: function(commentID) {
       return $http({

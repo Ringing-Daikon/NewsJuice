@@ -24,8 +24,12 @@
           <span>{{comment.text}}</span>
             <div id="comments-title">
             </div>
-          <div><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="deleteComment(comment._id, $index); $event.preventDefault()" class="text-muted">Delete</a></div>
+          <div>
+<!--             <span class="btn"><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="editComment(comment._id, $index, ); $event.preventDefault()" class="text-muted">Edit</a></span>
+ -->           
+           <span class="btn"><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="deleteComment(comment._id, $index); $event.preventDefault()" class="text-muted">Delete</a></span>
           </div>
         </div>
-    </form>
+      </div>
+  </form>
 </div>

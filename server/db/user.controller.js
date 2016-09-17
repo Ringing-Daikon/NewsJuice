@@ -49,7 +49,6 @@ module.exports = {
     );
   },
   getUser (req, res) {
-    console.log('blah')
     User.findOne({_facebookUniqueID: req.params.id}, 
       (err, data) => err ? 
         res.status(404).send(err)
