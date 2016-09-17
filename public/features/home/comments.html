@@ -5,12 +5,12 @@
         <!-- Hide Comment Text Box  And Get Saved Comments-->
 
         <!-- COMMENT TEXT -->
-        <div class="form-group">
+        <div class="form-group comment-input">
           <input type="text" class="form-control input-lg" name="text" ng-model="commentText" placeholder="Enter Your Comments">
         </div>
 
         <!-- SUBMIT BUTTON -->
-        <div class="article-title text-right">
+        <div class="comment-submit text-right">
           <button type="submit" class="btn btn-default">Submit</button>
         </div>
 
@@ -18,16 +18,18 @@
         <div ng-repeat="comment in comments.slice().reverse() track by $index">
           <div id="comments-header">
             <h2 class="comment">
-              {{users[comment._facebookUniqueID].firstname}}&nbsp{{users[comment._facebookUniqueID].lastname}}
+              <a href="https://www.facebook.com/{{user._facebookUniqueID}}">
+                {{users[comment._facebookUniqueID].firstname}}&nbsp{{users[comment._facebookUniqueID].lastname}}
+              </a>
             </h2>
-            <img ng-src="{{users[comment._facebookUniqueID].picture || users[0][comment._facebookUniqueID].picture}}">
-          <span>{{comment.text}}</span>
+            <a class="comments-picture" href="https://www.facebook.com/{{user._facebookUniqueID}}"><img ng-src="{{users[comment._facebookUniqueID].picture || users[0][comment._facebookUniqueID].picture}}"></a>
+          <span class="comment-text">{{comment.text}}</span>
             <div id="comments-title">
             </div>
-          <div>
+          <div class="comment-options">
 <!--             <span class="btn"><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="editComment(comment._id, $index, ); $event.preventDefault()" class="text-muted">Edit</a></span>
  -->           
-           <span class="btn"><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="deleteComment(comment._id, $index); $event.preventDefault()" class="text-muted">Delete</a></span>
+           <span><a href="#" ng-show="comment._facebookUniqueID === user._facebookUniqueID" ng-click="deleteComment(comment._id, $index); $event.preventDefault()" class="text-muted">Delete</a></span>
           </div>
         </div>
       </div>
