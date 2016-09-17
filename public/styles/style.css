@@ -101,8 +101,12 @@ h2.top {
   font-size: 36px;
 }
 
-h2.comment {
+h2.comment > a{
+  font-family: 'EB Garamond', serif;
+  color: #3b5998;
   font-size: 16px;
+  font-weight: bold
+
 }
 
 h2.bot {
@@ -147,12 +151,20 @@ h3 {
 }
 
 #home-left-div {
+  height: 2000px;
   padding-left: 0px;
 }
 
 #home-right-div {
   padding-right: 10px;
 }
+
+#comments-right-div {
+  margin-top: 60px;
+  margin-bottom: 60px;
+  padding-right: 10px;
+}
+
 
 /* Trend Chart */
 
@@ -414,16 +426,46 @@ div.tooltip-articles {
   border-bottom: 1px solid silver;
 }
 
+
+#comments-title {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 20px;
+}
+
 #comments-header > img {
   width: 45px;
   margin: 20px 20px 20px 0;
   border-radius: 8px;
 }
 
-#comments-title {
-  display: inline-block;
-  vertical-align: bottom;
-  margin-bottom: 20px;
+#comments-picture > img {
+  width: 45px;
+  margin: 20px 20px 20px 0;
+  border-radius: 8px;
+}
+
+.comment-name {
+ width: 80;
+ height: 80;
+ /*display: inline-block;*/
+ float: left;
+}
+
+.comment-picture {
+  width: 80;
+  height: 80;
+  /*display: inline-block;*/
+  float: left;
+}
+
+.comment-submit {
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+.comment-delete {
+  margin-left: 670px
 }
 
 .search-history-saveddate {
