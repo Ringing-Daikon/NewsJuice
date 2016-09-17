@@ -1,26 +1,8 @@
-// TO-DOs
-
-// 1: Make it so timeline width fills out the width of parent div.
-// see: http://jsfiddle.net/shawnbot/BJLe6/
-// use document.getElementById('graph') instead of $('#graph');
-
-// Timeline height can be a fixed px height.
-
-// 2: Set up graph to start from the middle of y-axes rather than bottom
-
 angular.module('smartNews.services', ['ngCookies'])
 
 .factory('renderWatsonBubbleChart', function($rootScope, $http) {
-
-
-  /*
-=======
-
-  //dummy data for testing
-  var data = window.data;
-
-  /*
->>>>>>> pre-merge commit
+  
+  /* 
     returns a promise that will return tone analysis data for
     the given string input.
   */
@@ -35,114 +17,250 @@ angular.module('smartNews.services', ['ngCookies'])
       });
   };
 
-  renderWatsonBubbleChart = function(articleData, event) {
+  // set dimensions outside of renderWatsonBubbleChart function
+  // so that closure preserves its value with different
+  // instances of the function.
+  var dimensions = {}
 
+  var renderWatsonBubbleChart = function(articleData, event) {
+    
     var button = angular.element(event.target);
-
     // If a bubbleChart has already been rendered for that article,
     // don't render another one.
     if (button.hasClass('inactive')) {
       button.removeClass('inactive');
 
       // HANDLE UNRENDERING BUBBLE CHART HERE
+      var svgNode = event.path[3].childNodes[4];
+      var svg = d3.select(svgNode);
+
+      svg.transition()
+        .duration(200)
+        .attr('height', 0)
+
 
     } else {
       button.addClass('inactive');
 
-      // Send article body to watson, get data back.
-      analyzeText(articleData.body)
-        .then((responseData) => {
-          var data = responseData.document_tone.tone_categories[0].tones;
+      var svgExists = false;
+      var svg;
 
-          // SVG box dimensions:
-          var width = 400,
-              height = 250;
-          var rTotal = 0;
-          for (var i = 0; i < data.length; i++) {
-            data[i].r = data[i].score * 100;
-            rTotal += data[i].r;
-          }
+      var node = event.path[3].childNodes;
 
-          // packSiblings takes in data with an 'r' (radius)
-          // property, and generates 'x' and 'y' properties
-          // on each item that will reflect their position
-          // on the bubble chart.
-          var circles = d3.packSiblings(data);
-
-          // create svg container with slide-down effect
-          var svg = d3.select(event.path[3])
-            .insert('svg', '.article-body')
-            .attr('width', 0)
-            .attr('height', 0)
-            .attr('class', 'article-bubble-chart');
-          svg.transition()
+      //check if a bubble chart already exists for that article.
+      for (var i = 0; i < node.length; i++) {
+        if (node[i].tagName === 'svg') {
+          svg = node[i];
+          svgExists = true;
+        }
+      }
+      if (svgExists) {
+        d3.select(svg)
+          .transition()
             .duration(200)
-            .attr('width', width)
-            .attr('height', height);
+            .attr('height', dimensions[articleData.id].height)
+      } else {
 
-          // set up the bubble chart
-          var nodes = svg.append('g')
-            .attr('transform', 'translate(200, 130)')
-            .selectAll('.bubble')
-            .data(circles)
-            .enter();
+        // Send article text to watson, get tone data back.
+        analyzeText(articleData.body)
+          .then((responseData) => {
+            var data = responseData.document_tone.tone_categories[0].tones;
 
-          // render the bubbles
-          var bubble = nodes.append('circle')
-            .attr('r', 0)
-            .transition()
-              .duration(500)
-              .attr('r', (d) => {
-                return d.r - 0.5;
+            var rTotal = 0;
+            for (var i = 0; i < data.length; i++) {
+              data[i].r = (data[i].score * 75) + 10;
+              rTotal += data[i].r;
+            }
+
+            // packSiblings takes in data with an 'r' (radius)
+            // property, and generates 'x' and 'y' properties
+            // on each item that will reflect their position
+            // on the bubble chart.
+            var circles = d3.packSiblings(data);
+
+            // determine the dimensions of the bubble chart
+            var farLeft = circles[0].x - circles[0].r;
+            var farTop = circles[0].y - circles[0].r;
+            var farRight = circles[0].x + circles[0].r;
+            var farBottom = circles[0].y + circles[0].r;
+
+            for (var i = 0; i < circles.length; i++) {
+              var left = circles[i].x - circles[i].r;
+              var top = circles[i].y - circles[i].r
+              var right = circles[i].x + circles[i].r;
+              var bottom = circles[i].y + circles[i].r;
+
+              var farLeft = left < farLeft ? left : farLeft;
+              var farTop = top < farTop ? top : farTop;
+              var farRight = right > farRight ? right : farRight;
+              var farBottom = bottom > farBottom ? bottom : farBottom;
+            }
+
+            dimensions[articleData.id] = {
+              width: farRight - farLeft + 100,
+              height: farBottom - farTop + 17
+            }
+
+            // create svg container with slide-down effect
+            var svg = d3.select(event.path[3])
+              .insert('svg', '.article-body')
+              .attr('width', 0)
+              .attr('height', 0)
+              .attr('class', 'article-bubble-chart')
+              .style('margin-bottom', '10px');
+            svg.transition()
+              .duration(200)
+              .attr('width', dimensions[articleData.id].width)
+              .attr('height', dimensions[articleData.id].height);
+
+            // set up the bubble chart
+            var nodes = svg.append('g')
+              .attr('transform', `translate(${Math.abs(farLeft) + 50}, ${Math.abs(farTop) + 12})`)
+              .selectAll('.bubble')
+              .data(circles)
+              .enter();
+
+            // render the bubbles
+            var bubble = nodes.append('circle')
+              .attr('r', 0)
+              .transition()
+                .duration(500)
+                .attr('r', (d) => {
+                  return d.r - 0.5;
+                });
+
+            //increment the colorIndex to pick a different color for each bubble.
+            var strokeIndex = 0;
+            var fillIndex = 0;
+
+            // colors for different bubbles
+            var colors = {
+              anger: '#E80521',
+              disgust: '#592684',
+              fear: '#325E2B',
+              joy: '#FF8C23',
+              sadness: '#086DB2'
+            }
+            var colorScheme = 0;
+            var bubbleOpacity = .8;
+            var strokeOpacity = 1;
+
+
+            // style the bubbles
+            bubble.attr('cx', (d) => d.x)
+              .attr('cy', (d) => d.y - 5)
+              .style('fill', (d) => colors[d.tone_id])
+              .style('fill-opacity', bubbleOpacity);
+
+            d3.selectAll('circle')
+              .classed('small-bubble', (d) => {
+                return d.r < 25;
               });
+              
+            // Add text to the bubbles.
+            colorIndex = 0;
 
-          //increment the colorIndex to pick a different color for each bubble.
+            nodes.filter((d) => d.r >= 25)
+              .append('text')
+              .attr('x', (d) => {
+                return d.x;
+              })
+              .attr('y', (d) => d.y)
+              .attr('text-anchor', 'middle')
+              .attr('class', 'bubble-label')
+              .text((d) => d.tone_name)
+              .style('fill', 'white')
+              .style('font-family', '"Karla", regular')
+              .style('font-size', '14px')
+              .style('letter-spacing', '0.01em')
 
-          var strokeIndex = 0;
-          var fillIndex = 0;
+            var smallBubbleLabel = d3.select('.bubble-label-svg');
+            var toneId;
+            d3.selectAll('circle')
+              .on('mouseover', function(d) {
+                d3.select(this)
+                  .transition()
+                    .duration(100)
+                    .style('fill-opacity', '1');
+                toneId = d.tone_id;
+                var circle = angular.element(this);
+                if (circle.hasClass('small-bubble')) {
+                  
+                  
 
-          // colors for different bubbles
-          var colors = {
-            anger: '#E80521',
-            disgust: '#592684',
-            fear: '#325E2B',
-            joy: '#FFD629',
-            sadness: '#086DB2'
-          }
-          var colorScheme = 0;
-          var bubbleOpacity = .7;
-          var strokeOpacity = 1;
+                  nodes.filter((d) => d.r < 25 && d.tone_id === toneId)
+                    .append('text')
+                    .attr('x', (d) => d.x + d.r)
+                    .attr('y', (d) => d.y - d.r)
+                    .attr('class', 'bubble-label')
+                    .text((d) => d.tone_name)
+                    .style('fill', 'white')
+                    .style('font-family', '"Karla", regular')
+                    .style('font-size', '14px')
+                    .style('letter-spacing', '0.01em')
+                    .style('text-shadow', '0 0 5px black, 0 0 5px black, 0 0 5px black')
 
-          // style the bubbles
-          bubble.attr('cx', (d) => d.x)
-            .attr('cy', (d) => d.y - 5)
-            .style('fill', (d) => colors[d.tone_id])
-            .style('fill-opacity', bubbleOpacity)
-            .style('stroke', 'white')
-            .style('stroke-width', '1.5px')
-            .style('stroke-opacity', strokeOpacity);
+                  nodes.filter((d) => d.r < 25 && d.tone_id === toneId)
+                    .append('line')
+                    .attr('x1', d.x)
+                    .attr('y1', d.y - 3)
+                    .attr('x2', d.x + d.r - 1)
+                    .attr('y2', d.y - d.r + 1)
+                    .attr('stroke', 'black')
+                    .attr('stroke-width', '1')
+                }
+              })
+              .on('mouseout', function(d) {
+                d3.select(this)
+                  .transition()
+                    .duration(100)
+                    .style('fill-opacity', bubbleOpacity)
 
-          // Add text to the bubbles.
-          colorIndex = 0;
-          nodes.append('text')
-            .attr('x', (d) => d.x)
-            .attr('y', (d) => d.y)
-            .attr('text-anchor', 'middle')
-            .text((d) => d.tone_name)
-            .style('fill', 'white')
-            .style('font-family', '"Karla", regular')
-            .style('font-size', '12px')
-        })
+                var lines = d3.selectAll('line')
+                lines.remove();
 
-
-
-
+                var text = d3.selectAll('text')
+                  .filter((d) => d.tone_id === toneId && d.r < 25)
+                  .transition()
+                    .duration(200)
+                    .style('opacity', 0)
+                text.remove();
+              });
+          })    
+      } 
     }
+  }
 
+  var removeBubbleChart = function(event) {
+    var svg = d3.selectAll('svg')
+      .transition()
+        .duration(200)
+        .attr('height', 0);
+
+    d3.select('.inactive')
+      .classed('inactive', false);
+
+    svg.remove();
+  }
+
+  var hideBubbleChart = function(event) {
+    var button = angular.element(event.target);
+    if (button.hasClass('inactive')) {
+      button.removeClass('inactive');
+      var svg = event.path[3].children[2];
+      d3.select(svg)
+        .transition()
+          .duration(200)
+          .attr('height', 0);
+      return false;
+    }
+    return true;
   }
 
   return {
-    renderWatsonBubbleChart: renderWatsonBubbleChart
+    renderWatsonBubbleChart: renderWatsonBubbleChart,
+    removeBubbleChart: removeBubbleChart,
+    hideBubbleChart: hideBubbleChart
   }
 })
 
@@ -184,8 +302,6 @@ angular.module('smartNews.services', ['ngCookies'])
       // .classed('svg-container', true) //container class to make it responsive
       .append('svg')
       // responsive SVG needs these two attr's and an absence of height and width attr's
-      // .attr('preserveAspectRatio', 'xMinYMin meet') // preserves aspect ratio by 'fitting' the viewbox to the viewport, rather than filling
-      // .attr('viewBox', '0 0 ' + (window.innerWidth) + ' ' + (window.innerHeight))
       .attr('viewBox', '0 0 ' + (window.innerWidth) + ' ' + 400 )
       // append group element
       .append('g')

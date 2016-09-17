@@ -36,5 +36,4 @@ angular.module('smartNews.home')
     });
 
   };
-
 });

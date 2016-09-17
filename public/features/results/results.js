@@ -12,7 +12,9 @@ angular.module('smartNews.results', [])
   };
 
   $scope.renderBubbleChart = function(articleData, $event) {
-    renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event)
+    if (renderWatsonBubbleChart.hideBubbleChart($event)) {
+      renderWatsonBubbleChart.renderWatsonBubbleChart(articleData, $event);
+    }
   }
 
   $scope.clickSave = function(el) {
